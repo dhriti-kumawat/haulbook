@@ -1,7 +1,7 @@
 {
   "name": "haulbook",
   "version": "2.0.0",
-  "description": "Order tracking app with authentication",
+  "description": "Haulbook: track every product you review, from order to refund",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
