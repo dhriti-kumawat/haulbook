@@ -56,3 +56,6 @@ data.json
 
 # TypeScript incremental build
 *.tsbuildinfo
+
+# Vercel CLI link
+.vercel
