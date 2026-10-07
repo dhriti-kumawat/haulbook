@@ -20,7 +20,17 @@ model User {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
+  // Email reminders
+  remindersEnabled   Boolean   @default(true)
+  reminderDaysBefore Int       @default(2)
+  lastDigestAt       DateTime?
+  onboardedAt        DateTime?
+
+  pushSubscriptions PushSubscription[]
   orders   Order[]
+  passwordResets PasswordResetToken[]
+  products Product[]
+  shops    Shop[]
   accounts Account[]
   sessions Session[]
 }
@@ -79,11 +89,14 @@ model SubProduct {
   order           Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
   
   productName     String
+  price           Float?
   returnDeadline  DateTime?
   delivery        DateTime?
   policyDays      Int      @default(7)
   returned        Boolean  @default(false)
   returnedDate    DateTime?
+  kept            Boolean  @default(false)
+  keptDate        DateTime?
   
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
@@ -97,4 +110,81 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model Shop {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name       String
+  policyDays Int      @default(7)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([userId, name])
+}
+
+/// One product a creator is reviewing: bought, sent as PR, or part of a paid collab.
+/// Each step is a timestamp; null means the step is not done yet.
+model Product {
+  id               String    @id @default(cuid())
+  userId           String
+  user             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  title            String
+  type             String    @default("bought") // "bought" | "pr" | "collab"
+  shop             String?   // where it was bought, or the brand that sent it
+  url              String?
+  imageUrl         String?
+  price            Float?    // what the creator paid (bought)
+  fee              Float?    // what the brand pays (collab)
+  deliverables     String?   // e.g. "1 Reel + 2 stories"
+  notes            String?
+
+  orderedAt        DateTime  @default(now())
+  deliveredAt      DateTime?
+  filmedAt         DateTime?
+  postedAt         DateTime?
+  postUrl          String?
+  returnedAt       DateTime?
+  refundedAt       DateTime?
+  keptAt           DateTime?
+  paidAt           DateTime?
+
+  returnWindowDays Int?
+  returnBy         DateTime? // explicit return deadline; otherwise deliveredAt + returnWindowDays
+  postBy           DateTime?
+  isSample         Boolean   @default(false) // example data added during onboarding
+
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  @@index([userId])
+}
+
+/// One-time password reset link. Only a hash of the token is stored.
+model PasswordResetToken {
+  id        String    @id @default(cuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash String    @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([userId])
+}
+
+/// One browser or phone that turned on notifications. Removed when the push service says it is gone.
+model PushSubscription {
+  id        String   @id @default(cuid())
+  userId    String
+  endpoint  String   @unique
+  p256dh    String
+  auth      String
+  device    String?
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }

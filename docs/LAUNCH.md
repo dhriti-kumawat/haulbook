@@ -1,0 +1,86 @@
+# Launch checklist
+
+Each step below needs an account that only the owner can create. The app already reads every setting listed here.
+
+## 1. Database (Neon)
+
+1. Create a project at https://neon.tech and copy its connection string.
+2. Set it as `DATABASE_URL` on Vercel.
+3. Create the tables from your machine: `DATABASE_URL="<neon url>" npx prisma db push`.
+
+## 2. Hosting (Vercel)
+
+1. Import the GitHub repository on https://vercel.com.
+2. Set these environment variables:
+   - `DATABASE_URL`
+   - `NEXTAUTH_URL`: for example `https://haulbook.app`
+   - `NEXTAUTH_SECRET`: generate with `openssl rand -base64 32`
+3. Add your domain under Project → Domains.
+
+## 3. Email (Resend)
+
+1. Create an account at https://resend.com.
+2. Add your domain and create the DNS records it shows.
+3. Create an API key and set `RESEND_API_KEY`.
+4. Set `EMAIL_FROM`, for example `Haulbook <reminders@haulbook.app>`. The address must be on the domain you verified.
+5. In the app, open Settings → "Send me a test email" to check delivery.
+
+## 4. Daily reminders
+
+1. Set `CRON_SECRET`: generate with `openssl rand -hex 32`.
+2. `vercel.json` schedules `/api/cron/reminders` at 02:30 UTC (08:00 IST). Vercel sends the secret on every call automatically.
+3. Each user gets at most one email per day, and only when something is due or newly late.
+
+## 5. Google sign-in (recommended)
+
+The fastest way in: one tap creates the account or signs in. It's the first option on both pages.
+
+1. In Google Cloud Console (console.cloud.google.com), create a project, then go to
+   APIs & Services → OAuth consent screen. Choose "External", add the app name (Haulbook),
+   your support email and logo, and the scopes `email` and `profile`. Publish it ("In production")
+   so anyone can sign in, not just test users.
+2. APIs & Services → Credentials → Create credentials → OAuth client ID → "Web application".
+3. Authorised JavaScript origins: `https://<your-domain>` (and `http://localhost:3000` for local testing).
+   Authorised redirect URIs: `https://<your-domain>/api/auth/callback/google`
+   (and `http://localhost:3000/api/auth/callback/google`).
+4. Copy the client ID and secret into `GOOGLE_ID` and `GOOGLE_SECRET` (Vercel and `.env.local`), then restart.
+
+Someone who signed up with email and password can later use Google with the same address; it opens
+the same account. Errors (cancelled, Google unreachable) come back to the sign-in page with a message.
+
+## Known limits to revisit as you grow
+
+- **Rate limits** are kept in server memory, so each Vercel instance counts on its own. For strict limits across instances, move them to Upstash Redis (`lib/rateLimit.ts`).
+- **Uploaded photos** are stored inside the database as small JPEGs (about 800px, under 300 KB each). At scale, move them to file storage such as Vercel Blob or S3.
+- **Link import:** some shops (for example Nykaa, and sometimes Flipkart) block automated page reads. Users can upload a photo instead.
+
+## Link import
+
+Pasting a product link reads the shop page directly first. When a shop blocks that, or builds its
+page with JavaScript, Haulbook asks two fallback readers, in order:
+
+1. **Jina Reader** (`r.jina.ai`, open source). Free without a key at about 20 links a minute.
+   A free key from jina.ai raises the limit: set `READER_API_KEY`. To keep links off third-party
+   servers, run your own copy of github.com/jina-ai/reader and set `READER_URL` to it, or set
+   `READER_URL=off`.
+2. **Microlink** (`api.microlink.io`). About 50 free links a day; `MICROLINK_API_KEY` for more,
+   `MICROLINK=off` to turn it off.
+
+Only public product links are ever sent, and only when the direct read didn't get the name and photo.
+Mention this in the privacy policy. If every reader fails, Add product says so and keeps the name
+from the link or the shop app's share text.
+
+## Phone notifications (Web Push)
+
+Reminders can also arrive as notifications on phones and computers, sent by the same daily job as
+the email digest (one digest per person per day, by email and/or notification).
+
+1. Generate a key pair once: `npx web-push generate-vapid-keys`.
+2. In Vercel, set `NEXT_PUBLIC_VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY` and `VAPID_SUBJECT`
+   (`mailto:` your support address). Keep the private key secret, and don't change the pair later:
+   new keys sign everyone out of notifications.
+3. Run `npx prisma db push` for the new `PushSubscription` table.
+
+People turn it on in Settings → Phone notifications. Android, Windows and Mac browsers work directly.
+iPhones (iOS 16.4+) need Haulbook added to the Home Screen first; the card shows those steps.
+Devices that uninstall or block notifications are removed automatically on the next send.

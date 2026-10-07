@@ -1,14 +1,25 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
+import { clientIp, rateLimit } from "@/lib/rateLimit";
 
 export async function POST(req: NextRequest) {
+  if (!rateLimit(`signup-ip:${clientIp(req.headers)}`, 5, 60 * 60_000)) {
+    return NextResponse.json({ error: "Too many sign-ups from this network. Try again later." }, { status: 429 });
+  }
   try {
     const { name, email, password } = await req.json();
 
     if (!email || !password) {
       return NextResponse.json(
         { error: "Email and password are required" },
+        { status: 400 }
+      );
+    }
+
+    if (typeof password !== "string" || password.length < 8) {
+      return NextResponse.json(
+        { error: "Password needs at least 8 characters" },
         { status: 400 }
       );
     }
@@ -20,7 +31,7 @@ export async function POST(req: NextRequest) {
 
     if (existingUser) {
       return NextResponse.json(
-        { error: "User already exists" },
+        { error: "An account with this email already exists. Sign in instead." },
         { status: 400 }
       );
     }
