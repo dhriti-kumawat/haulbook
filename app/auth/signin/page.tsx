@@ -1,9 +1,13 @@
 "use client";
 
 import { signIn } from "next-auth/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { Icon } from "@/components/Icon";
+import { GoogleAuth, authErrorMessage } from "@/components/GoogleAuth";
+import { PasswordInput } from "@/components/PasswordInput";
+import { PendingLinkNote } from "@/components/PendingLinkNote";
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
@@ -11,6 +15,13 @@ export default function SignIn() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+
+  // Google sends people back here with ?error=… when something goes wrong.
+  useEffect(() => {
+    const message = authErrorMessage(new URLSearchParams(window.location.search).get("error"));
+    if (message) setError(message);
+  }, []);
+
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -27,111 +38,62 @@ export default function SignIn() {
       if (result?.error) {
         setError(result.error);
       } else {
-        router.push("/");
+        router.replace("/home");
       }
     } catch (err) {
-      setError("An error occurred");
+      setError("Something went wrong. Try again.");
     } finally {
       setLoading(false);
     }
   }
 
   return (
-    <div style={{ width: "100%", maxWidth: "400px" }}>
-      <h1 style={{ textAlign: "center", marginBottom: "2rem" }}>Sign In</h1>
+    <div className="auth-card">
+      <div>
+        <h1>Welcome back</h1>
+        <p className="muted" style={{ marginTop: 6 }}>Sign in to see what needs you today.</p>
+      </div>
 
-      <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+      <PendingLinkNote action="Sign in" />
+
+      <GoogleAuth label="Continue with Google" />
+
+      <form onSubmit={handleSubmit} className="auth-form">
         {error && (
-          <div style={{ padding: "0.75rem", background: "#fee", borderRadius: "4px", color: "#c33" }}>
-            {error}
+          <div className="alert" role="alert">
+            <Icon name="alert" size={16} /> {error}
           </div>
         )}
 
-        <div>
-          <label htmlFor="email" style={{ display: "block", marginBottom: "0.5rem", fontWeight: "500" }}>
-            Email
-          </label>
+        <div className="field">
+          <label htmlFor="email" className="label">Email</label>
           <input
             id="email"
+            className="input"
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            autoComplete="email"
             required
-            style={{
-              width: "100%",
-              padding: "0.75rem",
-              border: "1px solid #ddd",
-              borderRadius: "4px",
-              fontSize: "1rem",
-              boxSizing: "border-box",
-            }}
           />
         </div>
 
-        <div>
-          <label htmlFor="password" style={{ display: "block", marginBottom: "0.5rem", fontWeight: "500" }}>
-            Password
-          </label>
-          <input
-            id="password"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            style={{
-              width: "100%",
-              padding: "0.75rem",
-              border: "1px solid #ddd",
-              borderRadius: "4px",
-              fontSize: "1rem",
-              boxSizing: "border-box",
-            }}
-          />
+        <div className="field">
+          <div className="label-row">
+            <label htmlFor="password" className="label">Password</label>
+            <Link href="/auth/forgot" className="label-link">Forgot password?</Link>
+          </div>
+          <PasswordInput id="password" value={password} onChange={setPassword} autoComplete="current-password" />
         </div>
 
-        <button
-          type="submit"
-          disabled={loading}
-          style={{
-            padding: "0.75rem",
-            background: "#0070f3",
-            color: "white",
-            border: "none",
-            borderRadius: "4px",
-            fontSize: "1rem",
-            fontWeight: "500",
-            cursor: loading ? "not-allowed" : "pointer",
-            opacity: loading ? 0.6 : 1,
-          }}
-        >
-          {loading ? "Signing in..." : "Sign In"}
+        <button type="submit" className="btn btn-primary btn-block" disabled={loading}>
+          {loading ? "Signing in…" : "Sign in"}
         </button>
       </form>
 
-      <div style={{ marginTop: "1.5rem", textAlign: "center" }}>
-        <button
-          onClick={() => signIn("google", { redirectTo: "/" })}
-          style={{
-            width: "100%",
-            padding: "0.75rem",
-            background: "#fff",
-            border: "1px solid #ddd",
-            borderRadius: "4px",
-            fontSize: "1rem",
-            cursor: "pointer",
-            marginBottom: "1rem",
-          }}
-        >
-          🔍 Sign in with Google
-        </button>
-      </div>
-
-      <div style={{ marginTop: "1rem", textAlign: "center", fontSize: "0.875rem" }}>
-        Don't have an account?{" "}
-        <Link href="/auth/signup" style={{ color: "#0070f3", textDecoration: "none" }}>
-          Sign up
-        </Link>
-      </div>
+      <p className="auth-switch">
+        New here? <Link href="/auth/signup">Create an account</Link>
+      </p>
     </div>
   );
 }
