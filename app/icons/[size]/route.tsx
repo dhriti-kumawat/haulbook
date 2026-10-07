@@ -4,8 +4,8 @@ import { NextRequest } from "next/server";
 const SIZES = [180, 192, 512];
 
 /** App icons drawn from the logo: a shopping bag with a tick on a lavender square. */
-export function GET(req: NextRequest, { params }: { params: { size: string } }) {
-  const size = Number(params.size);
+export async function GET(req: NextRequest, { params }: { params: Promise<{ size: string }> }) {
+  const size = Number((await params).size);
   if (!SIZES.includes(size)) return new Response("Not found", { status: 404 });
   // Maskable icons need extra padding so phones can crop them into circles.
   const maskable = req.nextUrl.searchParams.has("maskable");

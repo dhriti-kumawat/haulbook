@@ -10,9 +10,9 @@ export const metadata: Metadata = {
     "For creators who review products. Track what to film, what to post, what to return before the window closes, and which refunds and brand payments are still owed.",
 };
 
-export default async function Landing({ searchParams }: { searchParams: { preview?: string } }) {
+export default async function Landing({ searchParams }: { searchParams: Promise<{ preview?: string }> }) {
   // In development, /?preview=landing shows this page even when signed in.
-  const previewing = process.env.NODE_ENV !== "production" && searchParams.preview === "landing";
+  const previewing = process.env.NODE_ENV !== "production" && (await searchParams).preview === "landing";
   if (!previewing) {
     const session = await getServerSession(authOptions);
     if (session) redirect("/home");

@@ -9,21 +9,26 @@ For every product, Haulbook shows the one next step: film it, post it, return it
 
 ## Features
 
-- **Home**: the money still owed to you, counts of what to film, post and return, and a "Needs you" list sorted by deadline.
+- **Home**: what needs you this week, the money still owed to you, counts of what to film, post and return, and a "Needs you" list sorted by deadline.
 - **Products**:
-  - List, Board and Calendar views.
-  - On the board, drag cards between steps, or use the "Move to" menu.
-  - Select several products to move or delete them at once.
-- **Add by link**: paste an Amazon, Myntra, Flipkart or other product link, and the name, photo, price and shop fill in. You can also upload a photo.
-- **Shops & brands**: a default return window per shop, and a printable report per brand with post links and fees.
-- **Email reminders**: a short daily digest, sent only on days when something is due or newly late.
-- **Accounts**: email and password sign-in with a forgot-password flow, plus optional Google sign-in.
+  - List, Board and Calendar views. Finished products fold into a "Done" group.
+  - Each card shows its step ("To film", "To post"…) as a button that moves it to another step.
+  - On phones, swipe a card right to do its next step, or left to move it. Pull down to refresh.
+  - Select several products to move or delete them at once, with undo.
+  - Ticking a step keeps the rest consistent: ticking "Posted" also ticks "Delivered" and "Filmed".
+- **Product details**: edit everything in one panel. Problems show next to the field, and closing the panel saves your changes.
+- **Add by link**: paste a product link from almost any shop, and the name, photo, price and shop fill in. Shops that block automatic reading fall back to Jina Reader and Microlink. Pasting a shop app's share text keeps the product name, and long names get a "use a shorter name" suggestion. Upload a photo or screenshot when a shop can't be read.
+- **Share to Haulbook**: on Android, once installed, Haulbook appears in the share sheet of shop apps.
+- **Shops & brands**: set each shop's return window in one tap, and print a report per brand with post links and fees.
+- **Reminders**: a short daily digest, sent only on days something is due or newly late, by email and/or as a phone or browser notification.
+- **Accounts**: one-tap Google sign-in, or email and password with a forgot-password flow.
+- **Landing page**: visitors can paste a product link before signing up; it is waiting in Add product after they sign up.
 - **Phone install**: Haulbook can be added to the home screen and shows an offline page when there is no connection.
 - **Export**: download all products as a CSV file.
 
 ## Tech stack
 
-Next.js 14 (App Router), React 18, TypeScript, PostgreSQL with Prisma, NextAuth.js, and plain CSS with design tokens (`app/globals.css`).
+Next.js 15 (App Router), React 19, TypeScript, PostgreSQL with Prisma, NextAuth.js 4, Web Push (`web-push`), and plain CSS with design tokens (`app/globals.css`).
 
 ## Local setup
 
@@ -37,14 +42,15 @@ npm run dev
 
 Open http://localhost:3000.
 
-- **Demo account:** `DATABASE_URL=… node scripts/seed-demo.mjs` creates one with example products. The login details are in that script.
+- **Demo account:** `DATABASE_URL=postgresql://localhost/haulbook node scripts/seed-demo.mjs` creates one with example products. It only runs against a local database. The login details are in that script.
 - **Emails without a Resend key:** reminder and password-reset emails are not sent. They appear at http://localhost:3000/api/dev/outbox instead.
+- **Notifications:** generate keys with `npx web-push generate-vapid-keys`, add them to `.env.local`, then turn them on in Settings.
 - **Reminder job by hand:** `curl http://localhost:3000/api/cron/reminders` runs it once (no secret is needed in development).
 - **Landing page while signed in:** open http://localhost:3000/?preview=landing.
 
 ## Moving data from the old order tracker
 
-Older versions stored orders and their items. To convert every item into a Bought product, run:
+Haulbook was rebuilt from an order tracker that stored orders and their items. To convert every item into a Bought product, run:
 
 ```bash
 npx prisma db push
@@ -61,4 +67,10 @@ These steps need accounts that only you can create. See `docs/LAUNCH.md` for eac
 2. **Hosting:** deploy on Vercel. Set `NEXTAUTH_URL` to your domain and generate a new `NEXTAUTH_SECRET`.
 3. **Email:** create a Resend account, verify your sending domain, then set `RESEND_API_KEY` and `EMAIL_FROM`.
 4. **Reminders:** set `CRON_SECRET`. `vercel.json` already runs the reminder job daily at 08:00 IST.
-5. **Google sign-in (optional):** create an OAuth client in Google Cloud, then set `GOOGLE_ID` and `GOOGLE_SECRET`.
+5. **Google sign-in:** create an OAuth client in Google Cloud, then set `GOOGLE_ID` and `GOOGLE_SECRET`.
+6. **Notifications:** set `NEXT_PUBLIC_VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY` and `VAPID_SUBJECT`.
+7. **Link import (optional):** set `READER_API_KEY` and `MICROLINK_API_KEY` for higher limits.
+
+## Branches
+
+`main` is production. `dev` is where work is merged first; open a pull request from a short-lived branch into `dev`, and release by opening one from `dev` into `main`.
