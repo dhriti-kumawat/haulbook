@@ -1,43 +1,44 @@
 "use client";
 
 import type { ReactNode } from "react";
-import Link from "next/link";
 import { useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { BrandMark } from "@/components/Icon";
+import { HeroVisual } from "@/components/HeroVisual";
+
 
 export default function AuthLayout({
   children,
 }: {
   children: ReactNode;
 }) {
-  const { data: session, status } = useSession();
+  const { status } = useSession();
   const router = useRouter();
 
   useEffect(() => {
     if (status === "authenticated") {
-      router.push("/");
+      router.replace("/home");
     }
   }, [status, router]);
 
-  if (status === "loading") {
-    return <div>Loading...</div>;
-  }
-
   return (
-    <html lang="en">
-      <body style={{ fontFamily: "system-ui, sans-serif" }}>
-        <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
-          <nav style={{ padding: "1rem", borderBottom: "1px solid #ddd" }}>
-            <Link href="/" style={{ textDecoration: "none", fontSize: "1.25rem", fontWeight: "bold" }}>
-              📦 Order Tracker
-            </Link>
-          </nav>
-          <div style={{ flex: 1, display: "flex", justifyContent: "center", alignItems: "center", padding: "2rem" }}>
-            {children}
-          </div>
+    <div className="auth-shell">
+      <aside className="auth-aside">
+        <span className="brand"><BrandMark /> Haulbook</span>
+        <div>
+          <h2>Review more. <span className="accent-text">Lose nothing.</span></h2>
+          <p>Return windows, posting dates, refunds and brand payments for every product you review, counted down for you.</p>
+          <HeroVisual />
         </div>
-      </body>
-    </html>
+        <span className="muted" style={{ fontSize: 13 }}>Built for creators. Your data stays in your account.</span>
+      </aside>
+      {/* Phones: just the logo above the form. */}
+      <header className="auth-mtop">
+        <Link href="/" className="brand"><BrandMark /> Haulbook</Link>
+      </header>
+      <main className="auth-main">{children}</main>
+    </div>
   );
 }

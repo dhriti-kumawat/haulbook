@@ -1,30 +1,33 @@
 "use client";
 
 import { signIn } from "next-auth/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { Icon } from "@/components/Icon";
+import { GoogleAuth } from "@/components/GoogleAuth";
+import { PasswordInput } from "@/components/PasswordInput";
+import { PendingLinkNote } from "@/components/PendingLinkNote";
+
+const MIN_PASSWORD = 8;
 
 export default function SignUp() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+
+
+  const tooShort = password.length > 0 && password.length < MIN_PASSWORD;
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
 
-    if (password !== confirmPassword) {
-      setError("Passwords do not match");
-      return;
-    }
-
-    if (password.length < 6) {
-      setError("Password must be at least 6 characters");
+    if (password.length < MIN_PASSWORD) {
+      setError(`Password needs at least ${MIN_PASSWORD} characters`);
       return;
     }
 
@@ -39,11 +42,10 @@ export default function SignUp() {
 
       if (!res.ok) {
         const data = await res.json();
-        setError(data.error || "Sign up failed");
+        setError(data.error || "Could not create your account");
         return;
       }
 
-      // Sign in after successful signup
       const result = await signIn("credentials", {
         email,
         password,
@@ -53,153 +55,81 @@ export default function SignUp() {
       if (result?.error) {
         setError(result.error);
       } else {
-        router.push("/");
+        router.replace("/home");
       }
     } catch (err) {
-      setError("An error occurred");
+      setError("Something went wrong. Try again.");
     } finally {
       setLoading(false);
     }
   }
 
   return (
-    <div style={{ width: "100%", maxWidth: "400px" }}>
-      <h1 style={{ textAlign: "center", marginBottom: "2rem" }}>Sign Up</h1>
+    <div className="auth-card">
+      <div>
+        <h1>Create your account</h1>
+        <p className="muted" style={{ marginTop: 6 }}>Free. Takes under a minute.</p>
+      </div>
 
-      <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+      <PendingLinkNote action="Create your account" />
+
+      <GoogleAuth label="Sign up with Google" />
+
+      <form onSubmit={handleSubmit} className="auth-form">
         {error && (
-          <div style={{ padding: "0.75rem", background: "#fee", borderRadius: "4px", color: "#c33" }}>
-            {error}
+          <div className="alert" role="alert">
+            <Icon name="alert" size={16} /> {error}
           </div>
         )}
 
-        <div>
-          <label htmlFor="name" style={{ display: "block", marginBottom: "0.5rem", fontWeight: "500" }}>
-            Full Name
-          </label>
+        <div className="field">
+          <label htmlFor="name" className="label">Name</label>
           <input
             id="name"
+            className="input"
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
+            autoComplete="name"
             required
-            style={{
-              width: "100%",
-              padding: "0.75rem",
-              border: "1px solid #ddd",
-              borderRadius: "4px",
-              fontSize: "1rem",
-              boxSizing: "border-box",
-            }}
           />
         </div>
 
-        <div>
-          <label htmlFor="email" style={{ display: "block", marginBottom: "0.5rem", fontWeight: "500" }}>
-            Email
-          </label>
+        <div className="field">
+          <label htmlFor="email" className="label">Email</label>
           <input
             id="email"
+            className="input"
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            autoComplete="email"
             required
-            style={{
-              width: "100%",
-              padding: "0.75rem",
-              border: "1px solid #ddd",
-              borderRadius: "4px",
-              fontSize: "1rem",
-              boxSizing: "border-box",
-            }}
           />
         </div>
 
-        <div>
-          <label htmlFor="password" style={{ display: "block", marginBottom: "0.5rem", fontWeight: "500" }}>
-            Password
-          </label>
-          <input
+        <div className="field">
+          <label htmlFor="password" className="label">Password</label>
+          <PasswordInput
             id="password"
-            type="password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            style={{
-              width: "100%",
-              padding: "0.75rem",
-              border: "1px solid #ddd",
-              borderRadius: "4px",
-              fontSize: "1rem",
-              boxSizing: "border-box",
-            }}
+            onChange={setPassword}
+            autoComplete="new-password"
+            describedBy="password-hint"
           />
+          <span id="password-hint" className="hint" style={tooShort ? { color: "var(--urgent)" } : undefined}>
+            At least {MIN_PASSWORD} characters{tooShort ? ` · ${MIN_PASSWORD - password.length} more` : ""}
+          </span>
         </div>
 
-        <div>
-          <label htmlFor="confirmPassword" style={{ display: "block", marginBottom: "0.5rem", fontWeight: "500" }}>
-            Confirm Password
-          </label>
-          <input
-            id="confirmPassword"
-            type="password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            required
-            style={{
-              width: "100%",
-              padding: "0.75rem",
-              border: "1px solid #ddd",
-              borderRadius: "4px",
-              fontSize: "1rem",
-              boxSizing: "border-box",
-            }}
-          />
-        </div>
-
-        <button
-          type="submit"
-          disabled={loading}
-          style={{
-            padding: "0.75rem",
-            background: "#0070f3",
-            color: "white",
-            border: "none",
-            borderRadius: "4px",
-            fontSize: "1rem",
-            fontWeight: "500",
-            cursor: loading ? "not-allowed" : "pointer",
-            opacity: loading ? 0.6 : 1,
-          }}
-        >
-          {loading ? "Creating account..." : "Sign Up"}
+        <button type="submit" className="btn btn-primary btn-block" disabled={loading}>
+          {loading ? "Creating account…" : "Create account"}
         </button>
       </form>
 
-      <div style={{ marginTop: "1.5rem", textAlign: "center" }}>
-        <button
-          onClick={() => signIn("google", { redirectTo: "/" })}
-          style={{
-            width: "100%",
-            padding: "0.75rem",
-            background: "#fff",
-            border: "1px solid #ddd",
-            borderRadius: "4px",
-            fontSize: "1rem",
-            cursor: "pointer",
-            marginBottom: "1rem",
-          }}
-        >
-          🔍 Sign up with Google
-        </button>
-      </div>
-
-      <div style={{ marginTop: "1rem", textAlign: "center", fontSize: "0.875rem" }}>
-        Already have an account?{" "}
-        <Link href="/auth/signin" style={{ color: "#0070f3", textDecoration: "none" }}>
-          Sign in
-        </Link>
-      </div>
+      <p className="auth-switch">
+        Already have an account? <Link href="/auth/signin">Sign in</Link>
+      </p>
     </div>
   );
 }

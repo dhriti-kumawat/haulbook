@@ -1,199 +1,64 @@
-# Order Tracker - Next.js Edition
+# Haulbook
 
-A full-stack order tracking application with user authentication, built with **Next.js 14**, **PostgreSQL**, and **NextAuth.js**.
+Haulbook is a product tracker for creators who review products. Each product is one of three kinds:
+- **Bought**: you paid for it and may return it.
+- **PR**: a brand sent it for free.
+- **Paid collab**: a brand is paying you to post about it.
+
+For every product, Haulbook shows the one next step: film it, post it, return it before the window closes, or chase the refund or payment.
 
 ## Features
 
-✅ **User Authentication**
-- Email/password signup and signin
-- Google OAuth integration
-- Secure session management
+- **Home**: the money still owed to you, counts of what to film, post and return, and a "Needs you" list sorted by deadline.
+- **Products**:
+  - List, Board and Calendar views.
+  - On the board, drag cards between steps, or use the "Move to" menu.
+  - Select several products to move or delete them at once.
+- **Add by link**: paste an Amazon, Myntra, Flipkart or other product link, and the name, photo, price and shop fill in. You can also upload a photo.
+- **Shops & brands**: a default return window per shop, and a printable report per brand with post links and fees.
+- **Email reminders**: a short daily digest, sent only on days when something is due or newly late.
+- **Accounts**: email and password sign-in with a forgot-password flow, plus optional Google sign-in.
+- **Phone install**: Haulbook can be added to the home screen and shows an offline page when there is no connection.
+- **Export**: download all products as a CSV file.
 
-✅ **Order Management**
-- Create, read, update, and delete orders
-- Track sub-products and return deadlines
-- Automatic return status calculation
+## Tech stack
 
-✅ **Dashboard**
-- Real-time order statistics
-- Urgent and expired return alerts
-- User-friendly order cards
+Next.js 14 (App Router), React 18, TypeScript, PostgreSQL with Prisma, NextAuth.js, and plain CSS with design tokens (`app/globals.css`).
 
-## Tech Stack
-
-- **Frontend**: Next.js 14, React 18, TypeScript
-- **Backend**: Next.js API Routes
-- **Database**: PostgreSQL with Prisma ORM
-- **Auth**: NextAuth.js with Google OAuth & Credentials
-- **Styling**: CSS-in-JS (inline styles)
-
-## Prerequisites
-
-- Node.js 18+ and npm/yarn
-- PostgreSQL database (local or cloud)
-- Google OAuth credentials (for Google login)
-
-## Setup
-
-### 1. Install Dependencies
+## Local setup
 
 ```bash
 npm install
-```
-
-### 2. Configure Environment
-
-Copy `.env.local.example` to `.env.local`:
-
-```bash
-cp .env.local.example .env.local
-```
-
-Edit `.env.local` with your configuration:
-
-```env
-# Database
-DATABASE_URL="postgresql://user:password@localhost:5432/tracker_db"
-
-# NextAuth
-NEXTAUTH_URL="http://localhost:3000"
-NEXTAUTH_SECRET="generate-a-random-secret-here"
-
-# Google OAuth (get from https://console.cloud.google.com/)
-GOOGLE_ID="your-google-client-id"
-GOOGLE_SECRET="your-google-client-secret"
-```
-
-### 3. Setup Database
-
-Push the schema to your database:
-
-```bash
-npm run db:push
-```
-
-### 4. Migrate Old Data (Optional)
-
-If you have existing data from the Flask version:
-
-```bash
-npm run db:migrate
-```
-
-This will:
-- Read data from `backend/data.json`
-- Create a default user account
-- Populate orders and sub-products
-
-### 5. Start Development Server
-
-```bash
+cp .env.local.example .env.local   # then fill in DATABASE_URL and NEXTAUTH_SECRET
+cp .env.local .env                 # the Prisma CLI reads .env
+npx prisma db push
 npm run dev
 ```
 
-Visit [http://localhost:3000](http://localhost:3000) in your browser.
+Open http://localhost:3000.
 
-## Default Test Account (After Migration)
+- **Demo account:** `DATABASE_URL=… node scripts/seed-demo.mjs` creates one with example products. The login details are in that script.
+- **Emails without a Resend key:** reminder and password-reset emails are not sent. They appear at http://localhost:3000/api/dev/outbox instead.
+- **Reminder job by hand:** `curl http://localhost:3000/api/cron/reminders` runs it once (no secret is needed in development).
+- **Landing page while signed in:** open http://localhost:3000/?preview=landing.
 
-- **Email**: migrated@example.com
-- **Password**: Password123!
+## Moving data from the old order tracker
 
-## API Routes
-
-### Auth
-- `POST /api/auth/signup` - Create new account
-- `POST /api/auth/[...nextauth]` - NextAuth endpoints
-
-### Orders
-- `GET /api/orders` - Get user's orders
-- `POST /api/orders` - Create new order
-- `GET /api/orders/[id]` - Get specific order
-- `PUT /api/orders/[id]` - Update order
-- `DELETE /api/orders/[id]` - Delete order
-
-## Database Schema
-
-### User
-- id, name, email, password, image, createdAt, updatedAt
-- Relations: orders, accounts, sessions
-
-### Order
-- id, userId, orderID, platform, status, amount, deliveryDate
-- Relations: subProducts
-
-### SubProduct
-- id, orderId, productName, returnDeadline, delivery, policyDays, returned
-- Computed: _returnStatus
-
-## Development
-
-### Database Studio
-
-View and manage data with Prisma Studio:
+Older versions stored orders and their items. To convert every item into a Bought product, run:
 
 ```bash
-npm run db:studio
+npx prisma db push
+node scripts/orders-to-products.mjs
 ```
 
-### Database Migrations
+The script is safe to run more than once, and it does not touch the old tables.
 
-Create a new migration after schema changes:
+## Going live
 
-```bash
-npx prisma migrate dev --name migration_name
-```
+These steps need accounts that only you can create. See `docs/LAUNCH.md` for each one.
 
-## Deployment
-
-### Build for Production
-
-```bash
-npm run build
-npm start
-```
-
-### Environment Variables for Production
-
-Update `.env.local` with production values:
-- Real database URL
-- Real `NEXTAUTH_SECRET` (use a secure random string)
-- Real Google OAuth credentials
-- Set `NEXTAUTH_URL` to your production domain
-
-### Database
-
-For production, use a managed PostgreSQL service like:
-- Railway
-- Heroku Postgres
-- AWS RDS
-- Digital Ocean
-
-## Troubleshooting
-
-### Port Already in Use
-If port 3000 is in use, run:
-```bash
-npm run dev -- -p 3001
-```
-
-### Database Connection Error
-- Verify `DATABASE_URL` is correct
-- Ensure PostgreSQL is running
-- Check firewall settings
-
-### Google OAuth Issues
-- Verify `GOOGLE_ID` and `GOOGLE_SECRET`
-- Add `http://localhost:3000` to authorized origins in Google Console
-
-## Future Enhancements
-
-- Mobile app (React Native)
-- Email notifications
-- Advanced order filters
-- Analytics dashboard
-- Multi-currency support
-- Batch order import
-
-## License
-
-MIT
+1. **Database:** create a Postgres database (for example Neon) and set `DATABASE_URL`.
+2. **Hosting:** deploy on Vercel. Set `NEXTAUTH_URL` to your domain and generate a new `NEXTAUTH_SECRET`.
+3. **Email:** create a Resend account, verify your sending domain, then set `RESEND_API_KEY` and `EMAIL_FROM`.
+4. **Reminders:** set `CRON_SECRET`. `vercel.json` already runs the reminder job daily at 08:00 IST.
+5. **Google sign-in (optional):** create an OAuth client in Google Cloud, then set `GOOGLE_ID` and `GOOGLE_SECRET`.
