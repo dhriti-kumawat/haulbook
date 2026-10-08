@@ -11,6 +11,7 @@ import { useProducts } from "./ProductsProvider";
 import { patchForStep } from "@/lib/move";
 import { PhotoPicker } from "./PhotoPicker";
 import { FieldError } from "./FieldError";
+import { CollabPayment } from "./CollabPayment";
 import { LIMITS, validateProduct, type FieldErrors } from "@/lib/productValidate";
 
 const dateInput = (iso: string | null) => (iso ? iso.slice(0, 10) : "");
@@ -253,6 +254,8 @@ export function ProductSheet({ product, onClose }: { product: ProductView | null
                 </label>
               )}
             </section>
+
+            {product.type === "collab" && <CollabPayment product={product} />}
 
             <section className="field">
               <span className="sheet-label">Details</span>

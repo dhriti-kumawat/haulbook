@@ -1417,3 +1417,73 @@ button { font: inherit; color: inherit; }
   .voice-typebtn { display: none; }
 }
 @media (prefers-reduced-motion: reduce) { .voice-pulse { animation: none; } }
+
+/* Pro chip and locked state */
+.pro-chip { display: inline-flex; align-items: center; height: 20px; padding: 0 8px; margin-left: 6px; border-radius: 999px; vertical-align: middle; font-size: 11px; font-weight: 800; letter-spacing: 0.02em; color: var(--accent-ink); background: var(--accent-soft); }
+h1 .pro-chip { height: 24px; font-size: 12px; transform: translateY(-4px); }
+.pro-locked { display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; padding: 40px 24px; border-radius: 24px; background: var(--surface); border: 1px dashed var(--line-strong); }
+.pro-locked h2 { font-size: 20px; letter-spacing: -0.03em; }
+.pro-locked p { max-width: 420px; }
+.pro-locked-icon { width: 44px; height: 44px; border-radius: 14px; display: grid; place-items: center; background: var(--accent-soft); color: var(--accent-ink); }
+
+/* Income */
+.income-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 16px; }
+.income-bar .label { margin: 0; }
+.income-bar .btn { margin-left: auto; }
+.income-tiles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin-bottom: 16px; }
+.income-tile { display: flex; flex-direction: column; gap: 4px; padding: 16px; border-radius: 20px; background: var(--surface); border: 1px solid var(--line); min-width: 0; }
+.income-tile span { font-size: 13px; color: var(--muted); }
+.income-tile b { font-size: 26px; letter-spacing: -0.04em; }
+.income-tile em { font-style: normal; font-size: 12px; color: var(--muted); }
+.income-tile.is-main { background: linear-gradient(135deg, var(--accent-soft), #f6e3ee); border-color: transparent; }
+.income-tile.is-main b { color: var(--accent-ink); }
+.income-months { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 6px; height: 140px; align-items: end; }
+.income-month { height: 100%; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; gap: 6px; }
+.income-bar-fill { width: 100%; max-width: 28px; min-height: 3px; border-radius: 8px 8px 3px 3px; background: var(--accent); }
+.income-month em { font-style: normal; font-size: 11px; color: var(--muted); }
+.income-table-wrap { overflow-x: auto; margin: 0 -4px; }
+.income-table td.num, .income-table th:not(:first-child) { text-align: right; }
+.panel-card + .panel-card { margin-top: 12px; }
+@media (max-width: 900px) {
+  .income-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .income-tile b { font-size: 22px; }
+}
+@media (max-width: 640px) {
+  .income-bar .btn { margin-left: 0; width: 100%; }
+  .income-months { height: 110px; gap: 3px; }
+  .income-month em { font-size: 9px; }
+  .income-table { font-size: 13px; }
+  .income-table th, .income-table td { padding: 10px; }
+}
+
+/* Plans */
+.plan-card .plan-badge { flex: none; height: 26px; padding: 0 10px; border-radius: 999px; display: inline-flex; align-items: center; font-size: 12px; font-weight: 800; background: var(--surface-2); color: var(--muted); border: 1px solid var(--line); }
+.plan-card .plan-badge.is-pro { background: var(--accent); color: #fff; border-color: transparent; }
+.plan-meter { height: 8px; border-radius: 8px; background: var(--line); overflow: hidden; }
+.plan-meter i { display: block; height: 100%; background: var(--accent); border-radius: 8px; }
+.pro-banner { display: flex; align-items: center; gap: 8px; padding: 12px 14px; margin: 0 0 16px; border-radius: 14px; background: var(--accent-soft); color: var(--accent-ink); font-weight: 700; font-size: 14px; }
+.plan-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+.plan-col { display: flex; flex-direction: column; gap: 8px; align-items: flex-start; padding: 20px; border-radius: 22px; background: var(--surface); border: 1px solid var(--line); }
+.plan-col h2 { font-size: 22px; letter-spacing: -0.03em; }
+.plan-col.is-pro { background: linear-gradient(135deg, var(--accent-soft), #f6e3ee); border-color: transparent; }
+.plan-table td:not(:first-child), .plan-table th:not(:first-child) { text-align: center; width: 28%; }
+.plan-table svg { color: var(--ok); }
+@media (max-width: 640px) { .plan-grid { grid-template-columns: 1fr; } }
+
+/* Invoice details and invoices */
+.billing-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.billing-wide { grid-column: span 2; }
+@media (max-width: 640px) { .billing-grid { grid-template-columns: 1fr; } .billing-wide { grid-column: auto; } }
+.invoice-head { display: flex; justify-content: space-between; gap: 24px; margin: 8px 0 24px; flex-wrap: wrap; }
+.invoice-head h1 { font-size: 36px; letter-spacing: -0.04em; }
+.invoice-from { display: flex; flex-direction: column; gap: 2px; text-align: right; font-size: 14px; color: var(--muted); }
+.invoice-from b { color: var(--ink); font-size: 16px; }
+.invoice-to { display: flex; flex-direction: column; gap: 2px; margin-bottom: 16px; font-size: 14px; }
+.invoice-to b { font-size: 18px; }
+.invoice .report-table td.num, .invoice .report-table th:last-child { text-align: right; }
+.invoice .report-table tfoot td { border-top: 2px solid var(--line-strong); }
+.invoice-pay { display: flex; flex-direction: column; gap: 4px; margin-top: 18px; padding: 16px; border-radius: 16px; background: var(--surface); border: 1px solid var(--line); font-size: 14px; }
+@media (max-width: 640px) { .invoice-from { text-align: left; } }
+.collab-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.followup { display: flex; flex-direction: column; gap: 8px; margin-top: 4px; padding: 12px; border-radius: 14px; background: var(--surface-2); border: 1px solid var(--line); }
+.wa-form { display: flex; flex-direction: column; gap: 12px; }

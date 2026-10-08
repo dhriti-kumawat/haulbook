@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { requireUser } from "@/lib/session";
 import { NextRequest, NextResponse } from "next/server";
+import { planFor } from "@/lib/planServer";
 
 const pick = (u: { remindersEnabled: boolean; reminderDaysBefore: number; onboardedAt: Date | null; email: string | null }) => ({
   remindersEnabled: u.remindersEnabled,
@@ -12,7 +13,7 @@ const pick = (u: { remindersEnabled: boolean; reminderDaysBefore: number; onboar
 export async function GET() {
   const { user, error } = await requireUser();
   if (error) return error;
-  return NextResponse.json(pick(user));
+  return NextResponse.json({ ...pick(user), planInfo: await planFor(user) });
 }
 
 export async function PATCH(req: NextRequest) {
@@ -31,5 +32,5 @@ export async function PATCH(req: NextRequest) {
   }
   if (body.onboarded === true) data.onboardedAt = new Date();
   const updated = await prisma.user.update({ where: { id: user.id }, data });
-  return NextResponse.json(pick(updated));
+  return NextResponse.json({ ...pick(updated), planInfo: await planFor(updated) });
 }

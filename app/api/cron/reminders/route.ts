@@ -3,6 +3,8 @@ import { prisma } from "@/lib/prisma";
 import { productView } from "@/lib/products";
 import { buildDigest, renderDigest, renderPushDigest } from "@/lib/digest";
 import { sendPush } from "@/lib/push";
+import { hasPro } from "@/lib/plan";
+import { sendWhatsApp, whatsappConfigured } from "@/lib/whatsapp";
 import { sendEmail } from "@/lib/mailer";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -32,10 +34,10 @@ export async function GET(req: NextRequest) {
     where: {
       AND: [
         { OR: [{ lastDigestAt: null }, { lastDigestAt: { lt: startOfToday } }] },
-        { OR: [{ remindersEnabled: true, email: { not: null } }, { pushSubscriptions: { some: {} } }] },
+        { OR: [{ remindersEnabled: true, email: { not: null } }, { pushSubscriptions: { some: {} } }, { whatsappOptInAt: { not: null } }] },
       ],
     },
-    select: { id: true, email: true, name: true, reminderDaysBefore: true, remindersEnabled: true, _count: { select: { pushSubscriptions: true } } },
+    select: { id: true, email: true, name: true, reminderDaysBefore: true, remindersEnabled: true, plan: true, whatsappNumber: true, whatsappOptInAt: true, _count: { select: { pushSubscriptions: true } } },
   });
 
   let sent = 0;
@@ -56,12 +58,16 @@ export async function GET(req: NextRequest) {
         console.error(`Reminder email failed for user ${user.id}:`, e);
       }
     }
-    if (user._count.pushSubscriptions) {
+    if (user._count.pushSubscriptions && hasPro(user)) {
       const result = await sendPush(user.id, { ...renderPushDigest(lines), url: "/home", tag: "haulbook-digest" });
       if (result.sent) {
         delivered = true;
         pushed++;
       }
+    }
+    if (whatsappConfigured() && user.whatsappNumber && user.whatsappOptInAt && hasPro(user)) {
+      const { title, body } = renderPushDigest(lines);
+      if (await sendWhatsApp(user.whatsappNumber, `${title}. ${body} Open Haulbook: ${process.env.NEXTAUTH_URL ?? ""}/home`)) delivered = true;
     }
     if (delivered) await prisma.user.update({ where: { id: user.id }, data: { lastDigestAt: now } });
   }

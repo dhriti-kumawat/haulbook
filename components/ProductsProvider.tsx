@@ -1,5 +1,7 @@
 "use client";
 
+import { usePathname } from "next/navigation";
+
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
 import type { ProductView, StepKey } from "@/lib/products";
 import { STEP_FIELD } from "@/lib/products";
@@ -7,6 +9,7 @@ import { patchForMove, snapshotSteps } from "@/lib/move";
 import { BUCKET_LABEL, type Bucket } from "@/lib/summary";
 import { ProductSheet } from "./ProductSheet";
 import { AddProductDialog } from "./AddProductDialog";
+import type { PlanInfo } from "@/lib/plan";
 import { takePendingLink, type PendingLink } from "@/lib/pendingLink";
 import { PostLinkDialog } from "./PostLinkDialog";
 
@@ -29,6 +32,7 @@ export interface UserSettings {
   reminderDaysBefore: number;
   onboarded: boolean;
   email: string | null;
+  planInfo: PlanInfo;
 }
 
 interface Ctx {
@@ -116,6 +120,13 @@ export function ProductsProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     load();
   }, [load]);
+
+  // Following a link (invoice, report, Pro) leaves the page, so close any open panel or dialog.
+  const pathname = usePathname();
+  useEffect(() => {
+    setSheetId(null);
+    setAdding(false);
+  }, [pathname]);
 
   // Send any delete still waiting on its undo window when the app unmounts.
   useEffect(() => {

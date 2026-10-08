@@ -7,6 +7,7 @@ import { TYPE_LABEL } from "@/lib/products";
 import { formatDate, formatMoney } from "@/lib/format";
 import { Icon } from "@/components/Icon";
 import { useProducts } from "@/components/ProductsProvider";
+import { ProGate } from "@/components/ProGate";
 
 /** A printable summary of everything done with one brand: what was received, what was posted (with links) and what is owed. */
 function Report() {
@@ -86,7 +87,9 @@ function Report() {
 export default function ReportPage() {
   return (
     <Suspense>
-      <Report />
+      <ProGate feature="Brand reports">
+        <Report />
+      </ProGate>
     </Suspense>
   );
 }
