@@ -21,8 +21,8 @@ steps to reproduce. We aim to reply within a few days.
 - **Database:** Supabase row-level security is on for every table and the public API roles have no
   access; only the server connects.
 - **Secrets:** kept in Vercel environment variables, never in the repository.
-- **Dependencies:** CI type-checks, builds and runs `npm audit` on every pull request; Dependabot
-  opens weekly update pull requests.
+- **Dependencies:** CI type-checks, builds and runs `npm audit` (failing on high or critical issues)
+  on every push to `dev` and `main` and every pull request. Upgrades are made by hand on `dev`.
 
 ## Known limits
 
