@@ -15,7 +15,7 @@ function cell(v: unknown) {
   return `"${s.replace(/"/g, '""')}"`;
 }
 
-export default function IncomePage() {
+export default function EarningsPage() {
   const { products, loading } = useProducts();
   const years = useMemo(() => activeYears(products), [products]);
   const [fy, setFy] = useState(() => fyOf(new Date()));
@@ -31,7 +31,7 @@ export default function IncomePage() {
       ...s.brands.map((b) => [b.brand, b.feesEarned, b.feesDue, b.refundsRecovered, b.refundsPending, b.prValue, b.spent].map(cell).join(",")),
     ];
     const url = URL.createObjectURL(new Blob(["﻿" + lines.join("\r\n")], { type: "text/csv;charset=utf-8" }));
-    const a = Object.assign(document.createElement("a"), { href: url, download: `haulbook-income-${fyLabel(fy).replace(/\s/g, "-")}.csv` });
+    const a = Object.assign(document.createElement("a"), { href: url, download: `haulbook-earnings-${fyLabel(fy).replace(/\s/g, "-")}.csv` });
     a.click();
     URL.revokeObjectURL(url);
   }
@@ -40,12 +40,12 @@ export default function IncomePage() {
     <>
       <div className="page-head">
         <div>
-          <h1>Income <ProChip /></h1>
+          <h1>Earnings <ProChip /></h1>
           <p className="page-sub">Fees earned, refunds recovered and what&apos;s still owed, by financial year.</p>
         </div>
       </div>
 
-      <ProGate feature="The income dashboard">
+      <ProGate feature="Earnings">
         <div className="income-bar">
           <label className="label" htmlFor="fy">Financial year</label>
           <select id="fy" className="input input-sm" value={fy} onChange={(e) => setFy(Number(e.target.value))}>

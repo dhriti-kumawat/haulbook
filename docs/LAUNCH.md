@@ -105,7 +105,7 @@ What the creator says is sent to Anthropic for this; mention it in the privacy p
 | Up to 25 products in progress | Unlimited |
 | Email reminders | + phone notifications and WhatsApp reminders |
 | List and board views | + calendar, brand reports, CSV export |
-| | Income dashboard by financial year, invoices and payment follow-ups |
+| | Earnings by financial year, invoices and payment follow-ups |
 
 During early access `PLAN_LIMITS` is unset, so every account gets Pro and nothing is limited; Settings and
 the Free/Pro page say so. To start enforcing, set `PLAN_LIMITS=on` in Vercel. Accounts with

@@ -47,6 +47,9 @@ export function UserMenu({ name, email }: { name?: string | null; email?: string
           <Link href="/settings" role="menuitem" className="menu-item" onClick={() => setOpen(false)} style={{ textDecoration: "none" }}>
             <Icon name="settings" size={16} /> Settings
           </Link>
+          <Link href="/help" role="menuitem" className="menu-item" onClick={() => setOpen(false)} style={{ textDecoration: "none" }}>
+            <Icon name="book" size={15} /> Help
+          </Link>
           <button type="button" role="menuitem" className="menu-item" onClick={() => signOut({ callbackUrl: "/" })}>
             <Icon name="logout" size={16} /> Sign out
           </button>

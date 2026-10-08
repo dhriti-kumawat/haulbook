@@ -14,7 +14,7 @@ const ROWS: { label: string; free: string | boolean; pro: string | boolean }[] =
   { label: "Calendar view", free: false, pro: true },
   { label: "Brand reports", free: false, pro: true },
   { label: "CSV export", free: false, pro: true },
-  { label: "Income dashboard by financial year", free: false, pro: true },
+  { label: "Earnings by financial year", free: false, pro: true },
   { label: "Invoices and payment follow-ups", free: false, pro: true },
 ];
 

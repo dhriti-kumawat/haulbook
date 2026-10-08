@@ -24,7 +24,7 @@ export function ProGate({ feature, children }: { feature: string; children: Reac
     <section className="pro-locked">
       <span className="pro-locked-icon"><Icon name="sparkle" size={20} /></span>
       <h2>{feature} is part of Haulbook Pro</h2>
-      <p className="muted">Pro adds unlimited products, phone and WhatsApp reminders, the calendar, brand reports, income totals and invoices.</p>
+      <p className="muted">Pro adds unlimited products, phone and WhatsApp reminders, the calendar, brand reports, earnings and invoices.</p>
       <Link href="/pro" className="btn btn-primary">See Pro</Link>
     </section>
   );
