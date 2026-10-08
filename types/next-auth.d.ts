@@ -8,5 +8,7 @@ declare module "next-auth" {
       email?: string | null;
       image?: string | null;
     };
+    /** Seconds since epoch when this session was issued. */
+    issuedAt?: number;
   }
 }

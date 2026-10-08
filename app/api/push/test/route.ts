@@ -7,7 +7,7 @@ import { NextResponse } from "next/server";
 export async function POST() {
   const { user, error } = await requireUser();
   if (error) return error;
-  if (!rateLimit(`test-push:${user.id}`, 5, 60 * 60_000)) {
+  if (!(await rateLimit(`test-push:${user.id}`, 5, 60 * 60_000))) {
     return NextResponse.json({ error: "That's enough tests for now. Try again in an hour." }, { status: 429 });
   }
   const { sent } = await sendPush(user.id, {

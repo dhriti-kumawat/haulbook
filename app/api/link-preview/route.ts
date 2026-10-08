@@ -7,7 +7,7 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(req: NextRequest) {
   const { user, error } = await requireUser();
   if (error) return error;
-  if (!rateLimit(`link-preview:${user.id}`, 30, 10 * 60_000)) {
+  if (!(await rateLimit(`link-preview:${user.id}`, 30, 10 * 60_000))) {
     return NextResponse.json({ error: "Too many links at once. Wait a minute and try again." }, { status: 429 });
   }
 

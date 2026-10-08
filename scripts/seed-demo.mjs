@@ -18,7 +18,7 @@ const daysAgo = (n) => new Date(Date.now() - n * 86400000);
 
 await prisma.user.deleteMany({ where: { email: DEMO_EMAIL } });
 const user = await prisma.user.create({
-  data: { name: "Demo User", email: DEMO_EMAIL, password: await bcrypt.hash(DEMO_PASSWORD, 10) },
+  data: { name: "Demo User", email: DEMO_EMAIL, password: await bcrypt.hash(DEMO_PASSWORD, 12) },
 });
 
 const orders = [

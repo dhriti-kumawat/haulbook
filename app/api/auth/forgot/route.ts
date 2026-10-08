@@ -9,7 +9,7 @@ const GENERIC = { ok: true, message: "If that email has an account, a reset link
 
 export async function POST(req: NextRequest) {
   const ip = clientIp(req.headers);
-  if (!rateLimit(`forgot-ip:${ip}`, 5, 15 * 60_000)) {
+  if (!(await rateLimit(`forgot-ip:${ip}`, 5, 15 * 60_000))) {
     return NextResponse.json({ error: "Too many requests. Try again in a few minutes." }, { status: 429 });
   }
   const body = await req.json().catch(() => ({}));
@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
   if (!email || !email.includes("@") || email.length > 200) {
     return NextResponse.json({ error: "Enter your email address." }, { status: 400 });
   }
-  if (!rateLimit(`forgot-email:${email}`, 3, 60 * 60_000)) return NextResponse.json(GENERIC);
+  if (!(await rateLimit(`forgot-email:${email}`, 3, 60 * 60_000))) return NextResponse.json(GENERIC);
 
   const user = await prisma.user.findFirst({ where: { email: { equals: email, mode: "insensitive" } } });
   if (!user?.email) return NextResponse.json(GENERIC);
