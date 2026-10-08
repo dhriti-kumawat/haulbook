@@ -7,7 +7,7 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(req: NextRequest) {
   const { user, error } = await requireUser();
   if (error) return error;
-  if (!rateLimit(`voice-parse:${user.id}`, 40, 60 * 60_000)) {
+  if (!(await rateLimit(`voice-parse:${user.id}`, 40, 60 * 60_000))) {
     return NextResponse.json({ error: "That's a lot of products in an hour. Wait a bit and try again." }, { status: 429 });
   }
   const body = await req.json().catch(() => null);

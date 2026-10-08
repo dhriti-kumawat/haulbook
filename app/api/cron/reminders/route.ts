@@ -1,3 +1,4 @@
+import { timingSafeEqual } from "node:crypto";
 import { prisma } from "@/lib/prisma";
 import { productView } from "@/lib/products";
 import { buildDigest, renderDigest, renderPushDigest } from "@/lib/digest";
@@ -15,7 +16,10 @@ export const dynamic = "force-dynamic";
 export async function GET(req: NextRequest) {
   const secret = process.env.CRON_SECRET;
   if (secret) {
-    if (req.headers.get("authorization") !== `Bearer ${secret}`) {
+    const given = Buffer.from(req.headers.get("authorization") ?? "");
+    const expected = Buffer.from(`Bearer ${secret}`);
+    // Constant-time compare, so the secret can't be guessed from response timing.
+    if (given.length !== expected.length || !timingSafeEqual(given, expected)) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
   } else if (process.env.NODE_ENV === "production") {

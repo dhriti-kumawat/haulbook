@@ -9,9 +9,15 @@ export async function requireUser() {
   if (!session?.user?.email) {
     return { error: NextResponse.json({ error: "Unauthorized" }, { status: 401 }) };
   }
-  const user = await prisma.user.findUnique({ where: { email: session.user.email } });
+  const user = session.user.id
+    ? await prisma.user.findUnique({ where: { id: session.user.id } })
+    : await prisma.user.findUnique({ where: { email: session.user.email } });
   if (!user) {
     return { error: NextResponse.json({ error: "User not found" }, { status: 404 }) };
+  }
+  // Sessions issued before the password last changed (a reset) are no longer valid.
+  if (user.passwordChangedAt && (session.issuedAt ?? 0) * 1000 < user.passwordChangedAt.getTime() - 1000) {
+    return { error: NextResponse.json({ error: "Your password was changed. Sign in again." }, { status: 401 }) };
   }
   return { user };
 }

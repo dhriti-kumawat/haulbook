@@ -11,7 +11,7 @@ export async function POST() {
   const { user, error } = await requireUser();
   if (error) return error;
   if (!user.email) return NextResponse.json({ error: "Your account has no email address" }, { status: 400 });
-  if (!rateLimit(`test-digest:${user.id}`, 3, 60 * 60_000)) {
+  if (!(await rateLimit(`test-digest:${user.id}`, 3, 60 * 60_000))) {
     return NextResponse.json({ error: "You can send 3 test emails an hour. Try again later." }, { status: 429 });
   }
 
