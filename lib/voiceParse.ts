@@ -1,5 +1,5 @@
 import Anthropic from "@anthropic-ai/sdk";
-import { zodOutputFormat } from "@anthropic-ai/sdk/helpers/zod";
+import { betaZodOutputFormat } from "@anthropic-ai/sdk/helpers/beta/zod";
 import { z } from "zod";
 
 /** What the Add product form can be filled with from a spoken description. Null = not mentioned. */
@@ -31,11 +31,14 @@ export function aiConfigured() {
 /** Turns a spoken product description into form fields with Claude. */
 export async function parseWithClaude(transcript: string, today: string): Promise<VoiceProduct> {
   client ??= new Anthropic();
-  const response = await client.messages.parse({
+  const response = await client.beta.messages.parse({
     model: "claude-opus-5-5",
     max_tokens: 4000,
+    // If the model declines (a false-positive safety refusal), the API retries on a suitable model itself.
+    betas: ["server-side-fallback-2026-07-01"],
+    fallbacks: "default",
     // Short extraction: low effort keeps it fast and cheap.
-    output_config: { effort: "low", format: zodOutputFormat(VoiceProductSchema) },
+    output_config: { effort: "low", format: betaZodOutputFormat(VoiceProductSchema) },
     system: SYSTEM,
     messages: [{ role: "user", content: `Today is ${today}.\nWhat the creator said:\n"""${transcript}"""` }],
   });
