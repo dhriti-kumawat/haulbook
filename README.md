@@ -18,6 +18,7 @@ For every product, Haulbook shows the one next step: film it, post it, return it
   - Ticking a step keeps the rest consistent: ticking "Posted" also ticks "Delivered" and "Filmed".
 - **Product details**: edit everything in one panel. Problems show next to the field, and closing the panel saves your changes.
 - **Add by link**: paste a product link from almost any shop, and the name, photo, price and shop fill in. Shops that block automatic reading fall back to Jina Reader and Microlink. Pasting a shop app's share text keeps the product name, and long names get a "use a shorter name" suggestion. Upload a photo or screenshot when a shop can't be read.
+- **Voice add**: tap the mic in Add product and describe the product ("got the boAt headphones from Amazon for 1999, return in 7 days"); AI fills in the form for you to check. "Type instead" works where the browser can't listen.
 - **Share to Haulbook**: on Android, once installed, Haulbook appears in the share sheet of shop apps.
 - **Shops & brands**: set each shop's return window in one tap, and print a report per brand with post links and fees.
 - **Reminders**: a short daily digest, sent only on days something is due or newly late, by email and/or as a phone or browser notification.
@@ -28,7 +29,7 @@ For every product, Haulbook shows the one next step: film it, post it, return it
 
 ## Tech stack
 
-Next.js 15 (App Router), React 19, TypeScript, PostgreSQL with Prisma, NextAuth.js 4, Web Push (`web-push`), and plain CSS with design tokens (`app/globals.css`).
+Next.js 15 (App Router), React 19, TypeScript, PostgreSQL with Prisma, NextAuth.js 4, Web Push (`web-push`), Claude API for voice add (`@anthropic-ai/sdk`), and plain CSS with design tokens (`app/globals.css`).
 
 ## Local setup
 
@@ -69,7 +70,8 @@ These steps need accounts that only you can create. See `docs/LAUNCH.md` for eac
 4. **Reminders:** set `CRON_SECRET`. `vercel.json` already runs the reminder job daily at 08:00 IST.
 5. **Google sign-in:** create an OAuth client in Google Cloud, then set `GOOGLE_ID` and `GOOGLE_SECRET`.
 6. **Notifications:** set `NEXT_PUBLIC_VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY` and `VAPID_SUBJECT`.
-7. **Link import (optional):** set `READER_API_KEY` and `MICROLINK_API_KEY` for higher limits.
+7. **Voice add:** set `ANTHROPIC_API_KEY`. Without it, a simpler built-in reader fills in what it can.
+8. **Link import (optional):** set `READER_API_KEY` and `MICROLINK_API_KEY` for higher limits.
 
 ## Branches
 

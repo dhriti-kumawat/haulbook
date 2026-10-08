@@ -84,3 +84,16 @@ the email digest (one digest per person per day, by email and/or notification).
 People turn it on in Settings → Phone notifications. Android, Windows and Mac browsers work directly.
 iPhones (iOS 16.4+) need Haulbook added to the Home Screen first; the card shows those steps.
 Devices that uninstall or block notifications are removed automatically on the next send.
+
+## Voice add (AI)
+
+Add product has "Or just say it": the creator taps the mic and describes the product
+("got the boAt headphones from Amazon for 1999, return in 7 days"). The browser turns speech into
+text (Chrome, Edge and Safari; others get a "Type instead" box), then Claude (`claude-opus-5-5`,
+low effort, structured output) fills the form fields for the creator to check.
+
+1. Create an API key at console.anthropic.com and set `ANTHROPIC_API_KEY` in Vercel.
+2. Each description is one short request. Limit: 40 per person per hour.
+
+Without the key, a simple built-in reader still picks out the name, shop, price and return days.
+What the creator says is sent to Anthropic for this; mention it in the privacy policy.
