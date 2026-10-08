@@ -25,6 +25,8 @@ model User {
   reminderDaysBefore Int       @default(2)
   lastDigestAt       DateTime?
   onboardedAt        DateTime?
+  /// Sessions issued before this time are rejected (set on password reset).
+  passwordChangedAt  DateTime?
 
   pushSubscriptions PushSubscription[]
   orders   Order[]
@@ -187,4 +189,11 @@ model PushSubscription {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
+}
+
+/// Shared rate-limit counters, so limits hold across every server instance (fixed window per key).
+model RateLimit {
+  key     String   @id
+  count   Int
+  resetAt DateTime
 }
