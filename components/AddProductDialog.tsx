@@ -11,6 +11,8 @@ import { shortTitle } from "@/lib/shortTitle";
 import { parseShared } from "@/lib/shareText";
 import { validateProduct, type FieldErrors } from "@/lib/productValidate";
 import { FieldError } from "./FieldError";
+import { VoiceAdd } from "./VoiceAdd";
+import type { VoiceProduct } from "@/lib/voiceParse";
 
 /** Field → input id, in page order, for focusing the first problem. */
 const FIELD_IDS: [string, string][] = [
@@ -184,6 +186,23 @@ export function AddProductDialog({ open, onClose, initialUrl, initialTitle }: { 
     else onClose();
   }
 
+  /** Fills the form from a spoken description; only fields that were mentioned change. */
+  function fillFromVoice(f: VoiceProduct) {
+    if (f.type) setType(f.type);
+    if (f.title) setTitle(f.title);
+    if (f.shop) pickShop(f.shop);
+    if (f.amount != null) setAmount(String(f.amount));
+    if (f.delivered != null) setDelivered(f.delivered ? "yes" : "no");
+    if (f.deliveredOn) {
+      setDelivered("yes");
+      setDeliveredOn(f.deliveredOn);
+    }
+    if (f.returnWindowDays != null) setWindowDays(String(f.returnWindowDays));
+    if (f.postBy) setPostBy(f.postBy);
+    if (f.deliverables) setDeliverables(f.deliverables);
+    setShowAll(false);
+  }
+
   const shorter = shortTitle(title);
   const shopNames = [...new Set([...shops.map((s) => s.name), ...PLATFORMS.map((p) => p.name)])];
 
@@ -253,6 +272,8 @@ export function AddProductDialog({ open, onClose, initialUrl, initialTitle }: { 
             {lookup.state === "failed" && (title ? `${lookup.message ?? "Couldn't read that link."} We kept the name. Add the price and a photo or screenshot below.` : `${lookup.message ?? "Couldn't read that link."} Fill in the details below and upload a photo.`)}
           </span>
         </div>
+
+        <VoiceAdd onFill={fillFromVoice} />
 
         <PhotoPicker title={title} imageUrl={imageUrl} onChange={setImageUrl} size={84} />
 
