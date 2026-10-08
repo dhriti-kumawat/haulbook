@@ -12,6 +12,7 @@ import { SwipeHint } from "@/components/SwipeHint";
 import { Board } from "@/components/Board";
 import { BulkBar } from "@/components/BulkBar";
 import { Calendar } from "@/components/Calendar";
+import { ProChip, ProGate, useHasPro } from "@/components/ProGate";
 import { useProducts } from "@/components/ProductsProvider";
 
 const BUCKETS: Bucket[] = ["receive", "film", "post", "return", "money", "done"];
@@ -26,6 +27,7 @@ function Products() {
   const [type, setType] = useState<ProductType | null>(null);
   const [query, setQuery] = useState("");
   const [searchOpen, setSearchOpen] = useState(false);
+  const hasPro = useHasPro();
   const [view, setView] = useState<"list" | "board" | "calendar">("list");
   const tabsRef = useRef<HTMLDivElement>(null);
   const [selecting, setSelecting] = useState(false);
@@ -221,7 +223,7 @@ function Products() {
                 <Icon name="columns" size={15} /> Board
               </button>
               <button type="button" aria-pressed={view === "calendar"} onClick={() => changeView("calendar")}>
-                <Icon name="calendar" size={15} /> Calendar
+                <Icon name="calendar" size={15} /> Calendar{!hasPro && <ProChip />}
               </button>
             </div>
             <div className="toolbar-actions">
@@ -231,7 +233,7 @@ function Products() {
                 </button>
               )}
               {searchBox}
-              <a href="/api/export" className="btn btn-quiet btn-sm" download>
+              <a href={hasPro ? "/api/export" : "/pro"} className="btn btn-quiet btn-sm" download={hasPro ? true : undefined}>
                 <Icon name="download" size={14} /> Export
               </a>
             </div>
@@ -251,7 +253,9 @@ function Products() {
       ) : showBoard ? (
         <Board products={base} />
       ) : showCalendar ? (
-        <Calendar products={base} agenda={mobile} />
+        <ProGate feature="The calendar">
+          <Calendar products={base} agenda={mobile} />
+        </ProGate>
       ) : list.length === 0 ? (
         <div className="empty">
           <h3>{products.length ? "Nothing here" : "No products yet"}</h3>

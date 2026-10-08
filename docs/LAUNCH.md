@@ -97,3 +97,32 @@ low effort, structured output) fills the form fields for the creator to check.
 
 Without the key, a simple built-in reader still picks out the name, shop, price and return days.
 What the creator says is sent to Anthropic for this; mention it in the privacy policy.
+
+## Free and Pro plans
+
+| Free | Pro |
+|---|---|
+| Up to 25 products in progress | Unlimited |
+| Email reminders | + phone notifications and WhatsApp reminders |
+| List and board views | + calendar, brand reports, CSV export |
+| | Income dashboard by financial year, invoices and payment follow-ups |
+
+During early access `PLAN_LIMITS` is unset, so every account gets Pro and nothing is limited; Settings and
+the Free/Pro page say so. To start enforcing, set `PLAN_LIMITS=on` in Vercel. Accounts with
+`plan = 'pro'` in the `User` table keep everything; until payments exist, set that by hand in Supabase.
+Limits are checked on the server (adding a product past 25, CSV export, notifications, invoices) and the
+app shows a "Pro" card instead of locked screens.
+
+## WhatsApp reminders
+
+Uses Meta's WhatsApp Cloud API. Off until configured; Settings shows "Coming soon" until then.
+
+1. In Meta Business Manager, create a WhatsApp Business account and add a sending number.
+2. Create a message template named `haulbook_digest` (category Utility, language English) whose body
+   has one parameter, e.g. `Haulbook reminder: {{1}}`, and wait for Meta to approve it.
+3. Create a permanent access token for a system user with `whatsapp_business_messaging`.
+4. Set `WHATSAPP_TOKEN`, `WHATSAPP_PHONE_NUMBER_ID` (and `WHATSAPP_TEMPLATE` / `WHATSAPP_TEMPLATE_LANG`
+   if different) in Vercel.
+
+People turn it on in Settings with their number and a consent tick box (stored as `whatsappOptInAt`);
+the daily reminder job then sends the same digest there. Meta charges per message; check its pricing.

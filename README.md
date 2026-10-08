@@ -20,6 +20,9 @@ For every product, Haulbook shows the one next step: film it, post it, return it
 - **Add by link**: paste a product link from almost any shop, and the name, photo, price and shop fill in. Shops that block automatic reading fall back to Jina Reader and Microlink. Pasting a shop app's share text keeps the product name, and long names get a "use a shorter name" suggestion. Upload a photo or screenshot when a shop can't be read.
 - **Voice add**: tap the mic in Add product and describe the product ("got the boAt headphones from Amazon for 1999, return in 7 days"); AI fills in the form for you to check. "Type instead" works where the browser can't listen.
 - **Share to Haulbook**: on Android, once installed, Haulbook appears in the share sheet of shop apps.
+- **Income** (Pro): collab fees earned and due, refunds recovered and pending, value of PR products received, and per-brand totals for each Indian financial year (April to March), with a CSV for tax time.
+- **Invoices and payment follow-ups** (Pro): a numbered, printable invoice for each paid collab using your billing details, and a ready payment reminder to copy, email or send on WhatsApp.
+- **Free and Pro**: Free covers up to 25 products in progress with email reminders, list and board views. Pro adds unlimited products, phone and WhatsApp reminders, calendar, brand reports, CSV export, income and invoices. Pro is free for everyone during early access.
 - **Shops & brands**: set each shop's return window in one tap, and print a report per brand with post links and fees.
 - **Reminders**: a short daily digest, sent only on days something is due or newly late, by email and/or as a phone or browser notification.
 - **Accounts**: one-tap Google sign-in, or email and password with a forgot-password flow.
@@ -75,4 +78,4 @@ These steps need accounts that only you can create. See `docs/LAUNCH.md` for eac
 
 ## Branches
 
-`main` is production. `dev` is where work is merged first; open a pull request from a short-lived branch into `dev`, and release by opening one from `dev` into `main`.
+Only two branches: `dev` (where work is committed) and `main` (production; Vercel deploys it). Release by opening a pull request from `dev` into `main`. CI runs the type check, build and security audit on both.

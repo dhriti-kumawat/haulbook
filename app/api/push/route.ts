@@ -1,12 +1,14 @@
 import { prisma } from "@/lib/prisma";
 import { pushConfigured } from "@/lib/push";
 import { requireUser } from "@/lib/session";
+import { hasPro, PRO_REQUIRED } from "@/lib/plan";
 import { NextRequest, NextResponse } from "next/server";
 
 /** Saves this device's push subscription for the signed-in user. */
 export async function POST(req: NextRequest) {
   const { user, error } = await requireUser();
   if (error) return error;
+  if (!hasPro(user)) return NextResponse.json(PRO_REQUIRED("Phone notifications"), { status: 402 });
   if (!pushConfigured()) return NextResponse.json({ error: "Notifications aren't set up on this server yet." }, { status: 503 });
 
   const body = await req.json().catch(() => null);

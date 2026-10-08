@@ -5,11 +5,16 @@ import { signOut, useSession } from "next-auth/react";
 import { Icon } from "@/components/Icon";
 import { useProducts } from "@/components/ProductsProvider";
 import { PushSettings } from "@/components/PushSettings";
+import { PlanCard } from "@/components/PlanCard";
+import { BillingSettings } from "@/components/BillingSettings";
+import { WhatsAppSettings } from "@/components/WhatsAppSettings";
+import type { PlanInfo } from "@/lib/plan";
 
 interface Settings {
   remindersEnabled: boolean;
   reminderDaysBefore: number;
   email: string | null;
+  planInfo?: PlanInfo;
 }
 
 const DAY_OPTIONS = [1, 2, 3, 5, 7];
@@ -126,7 +131,13 @@ export default function SettingsPage() {
             </div>
           </section>
 
+          {settings.planInfo && <PlanCard info={settings.planInfo} />}
+
           <PushSettings />
+
+          <WhatsAppSettings />
+
+          <BillingSettings />
 
           <section className="panel-card">
             <div className="panel-card-head">
@@ -136,7 +147,7 @@ export default function SettingsPage() {
               </div>
             </div>
             <div>
-              <a href="/api/export" className="btn btn-secondary btn-sm" download>
+              <a href={settings.planInfo?.pro === false ? "/pro" : "/api/export"} className="btn btn-secondary btn-sm" download={settings.planInfo?.pro === false ? undefined : true}>
                 <Icon name="download" size={14} /> Download all products (CSV)
               </a>
             </div>

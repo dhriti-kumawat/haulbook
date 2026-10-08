@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { productView, TYPE_LABEL } from "@/lib/products";
 import { requireUser } from "@/lib/session";
+import { hasPro, PRO_REQUIRED } from "@/lib/plan";
 import { NextResponse } from "next/server";
 
 const COLUMNS = [
@@ -22,6 +23,7 @@ function cell(value: unknown) {
 export async function GET() {
   const { user, error } = await requireUser();
   if (error) return error;
+  if (!hasPro(user)) return NextResponse.json(PRO_REQUIRED("CSV export"), { status: 402 });
   const products = (await prisma.product.findMany({ where: { userId: user.id, isSample: false }, orderBy: { orderedAt: "desc" } })).map((p) =>
     productView(p)
   );

@@ -28,6 +28,23 @@ model User {
   /// Sessions issued before this time are rejected (set on password reset).
   passwordChangedAt  DateTime?
 
+  /// "free" or "pro". During early access everyone gets Pro features (see lib/plan.ts).
+  plan               String    @default("free")
+
+  // Billing details printed on invoices for paid collabs
+  billingName        String?
+  billingAddress     String?
+  billingEmail       String?
+  billingPhone       String?
+  billingUpi         String?
+  billingBank        String?
+  billingGstin       String?
+  billingPan         String?
+
+  /// WhatsApp reminders: number in E.164 (+91…) and when the user agreed to messages.
+  whatsappNumber     String?
+  whatsappOptInAt    DateTime?
+
   pushSubscriptions PushSubscription[]
   orders   Order[]
   passwordResets PasswordResetToken[]
@@ -152,6 +169,9 @@ model Product {
   refundedAt       DateTime?
   keptAt           DateTime?
   paidAt           DateTime?
+  /// Invoice number for paid collabs, assigned the first time an invoice is made (per user).
+  invoiceNumber    Int?
+  invoicedAt       DateTime?
 
   returnWindowDays Int?
   returnBy         DateTime? // explicit return deadline; otherwise deliveredAt + returnWindowDays
