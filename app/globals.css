@@ -158,11 +158,12 @@ button { font: inherit; color: inherit; }
 }
 .auth-aside { position: relative; min-height: 100vh; align-items: center; justify-content: center; padding: 104px 48px 80px; }
 /* Logo, message and visual share one centred column; the logo and note stay pinned to the top and bottom. */
-.auth-aside > * { width: min(100%, 480px); }
-.auth-aside > .brand { position: absolute; top: 40px; left: 48px; width: auto; }
-.auth-aside > .muted { position: absolute; bottom: 32px; left: 0; right: 0; width: auto; text-align: center; }
-.auth-aside h2 { font-size: 40px; max-width: 460px; margin-top: 8px; letter-spacing: -0.05em; }
-.auth-aside p { color: var(--muted); max-width: 420px; margin-top: 12px; font-size: 16px; }
+.auth-aside > div { width: min(100%, 460px); text-align: center; }
+.auth-aside h2, .auth-aside p { text-wrap: balance; }
+.auth-aside > .brand { position: absolute; top: 40px; left: 48px; }
+.auth-aside > .muted { position: absolute; bottom: 32px; left: 0; right: 0; text-align: center; }
+.auth-aside h2 { font-size: 40px; max-width: 460px; margin: 8px auto 0; letter-spacing: -0.05em; }
+.auth-aside p { color: var(--muted); max-width: 420px; margin: 12px auto 0; font-size: 16px; }
 .auth-preview { margin-top: 36px; display: flex; flex-direction: column; gap: 8px; max-width: 420px; }
 .auth-preview .preview-row {
   display: flex; justify-content: space-between; align-items: center; gap: 12px;
@@ -760,10 +761,10 @@ button { font: inherit; color: inherit; }
 .hv-badge-icon.is-ok { background: var(--ok-soft); color: var(--ok); }
 .hv-badge-icon.is-accent { background: var(--accent-soft); color: var(--accent-ink); }
 .hv-badge-thumb { position: relative; width: 26px; height: 26px; border-radius: 50%; overflow: hidden; }
-.auth-aside .hv { max-width: 480px; margin: 28px 0 0; }
+.auth-aside .hv { max-width: 460px; margin: 28px auto 0; text-align: left; }
 @media (min-width: 901px) and (max-height: 860px) {
   .auth-aside { padding: 96px 48px 64px; }
-  .auth-aside > div { zoom: 0.8; }
+  .auth-aside .hv { padding: 44px 36px; margin-top: 20px; }
 }
 .deadline-chip.is-ok { background: var(--ok-soft); color: var(--ok); }
 @media (max-width: 900px) {
