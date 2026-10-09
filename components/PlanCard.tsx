@@ -8,13 +8,13 @@ export function PlanCard({ info }: { info: PlanInfo }) {
       <div className="panel-card-head">
         <div>
           <h2>
-            {info.plan === "pro" ? "Haulbook Pro" : info.earlyAccess ? "Pro, free during early access" : "Free plan"}
+            {info.plan === "pro" ? "Haulbook Pro" : info.earlyAccess ? "Pro unlocked while payments open" : "Free plan"}
           </h2>
           <p className="muted">
             {info.plan === "pro"
               ? "Everything is unlocked."
               : info.earlyAccess
-                ? "Every Pro feature is on for you while Haulbook is in early access. We'll tell you well before that changes."
+                ? "Pro is ₹99 a month during early access (usually ₹199). Until payments open, every Pro feature is on for you, and you keep the early price."
                 : `${info.activeCount} of ${info.activeLimit} products in progress. Pro adds unlimited products and more.`}
           </p>
         </div>

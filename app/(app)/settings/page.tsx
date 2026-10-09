@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { signOut, useSession } from "next-auth/react";
 import { Icon } from "@/components/Icon";
@@ -166,6 +167,7 @@ export default function SettingsPage() {
               <button type="button" className="btn btn-secondary btn-sm" onClick={() => signOut({ callbackUrl: "/" })}>
                 <Icon name="logout" size={14} /> Sign out
               </button>
+              <Link href="/help" className="btn btn-quiet btn-sm">Help and questions</Link>
             </div>
           </section>
         </div>

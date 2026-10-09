@@ -35,6 +35,10 @@ const securityHeaders = [
 const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
+  // The Income page was renamed Earnings.
+  async redirects() {
+    return [{ source: "/income", destination: "/earnings", permanent: true }];
+  },
   async headers() {
     return [
       { source: "/:path*", headers: securityHeaders },

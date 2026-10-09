@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { BrandMark, Icon } from "./Icon";
 import { HeroVisual } from "./HeroVisual";
+import { MAIN_FAQ } from "@/lib/faq";
 import { FooterTry, StickyCta } from "./LandingClient";
 
 /*
@@ -52,27 +53,9 @@ const FEATURES = [
 const KINDS = [
   { type: "bought", label: "Bought", line: "Return it in time", text: "Return window and refund follow-up.", img: "/landing/headphones.jpg", alt: "Headphones" },
   { type: "pr", label: "PR", line: "Post it on time", text: "Posting date, deliverables and post link.", img: "/landing/phone.jpg", alt: "Phone" },
-  { type: "collab", label: "Paid collab", line: "Get paid for it", text: "Fee, deliverables and payment follow-up.", img: "/landing/vase.jpg", alt: "Ceramic vases" },
+  { type: "collab", label: "Paid collab", line: "Get paid for it", text: "Deliverables, earnings and payment follow-up.", img: "/landing/vase.jpg", alt: "Ceramic vases" },
 ];
 
-const FAQ = [
-  {
-    q: "Which shops does link import work with?",
-    a: "Most online shops. If a shop blocks it, add the details yourself and upload a photo or a screenshot.",
-  },
-  {
-    q: "Do I need to install anything?",
-    a: "No. Haulbook runs in your browser. On your phone you can add it to your home screen and open it like an app.",
-  },
-  {
-    q: "Will I get a lot of emails?",
-    a: "No. One short email, only on days something is due or newly late. Turn it off any time in Settings.",
-  },
-  {
-    q: "Who can see my products?",
-    a: "Only you. You can download everything as a spreadsheet at any time.",
-  },
-];
 
 export function LandingPage() {
   return (
@@ -81,6 +64,7 @@ export function LandingPage() {
       <header className="l-header">
         <Link href="/" className="brand"><BrandMark /> Haulbook</Link>
         <nav className="l-nav" aria-label="Account">
+          <Link href="/pricing" className="btn btn-ghost btn-sm l-nav-pricing">Pricing</Link>
           <Link href="/auth/signin" className="btn btn-ghost btn-sm">Sign in</Link>
           <Link href="/auth/signup" className="btn btn-primary btn-sm">Get started</Link>
         </nav>
@@ -155,7 +139,36 @@ export function LandingPage() {
           </div>
         </section>
 
-        {/* 3 · Product types as arch cards */}
+        {/* 3 · Voice add */}
+        <section className="l-section split">
+          <div className="split-copy">
+            <span className="l-pill is-new"><i />New · Voice add</span>
+            <h2 className="l-h2">Say it. <span className="l-soft">It&apos;s added.</span></h2>
+            <p>Unboxing on camera? Tap the mic and say what it is, where it&apos;s from and when it&apos;s due. Haulbook fills in the rest. English or Hinglish.</p>
+            <div className="split-tags">
+              {["Name and brand", "Price or fee", "Return window", "Post-by date", "Deliverables"].map((t) => <span key={t} className="deadline-chip">{t}</span>)}
+            </div>
+          </div>
+          <div className="split-visual grad voice-demo" aria-hidden="true">
+            <span className="l-sticker vd-sticker"><span className="vd-hi">हि</span>Works in Hinglish</span>
+            <div className="vd-card">
+              <div className="vd-live">
+                <span className="vd-dot" />
+                <span className="vd-text">&ldquo;Got the <b>boAt headphones</b> from <b>Amazon</b> for <b>1999</b>, return in <b>7 days</b>&rdquo;</span>
+                <span className="vd-done">Done</span>
+              </div>
+              <p className="vd-ok"><Icon name="check" size={13} /> Filled in name, type, shop, price, return window</p>
+              <div className="vd-fields">
+                <span className="vd-field"><Photo src="/landing/headphones.jpg" size={34} /><span><em>Product name</em><b>boAt Rockerz 550</b></span></span>
+                <span className="vd-field"><span className="vd-ico">A</span><span><em>Shop</em><b>Amazon</b></span></span>
+                <span className="vd-field"><span className="vd-ico is-soon">₹</span><span><em>Price paid</em><b>₹1,999</b></span></span>
+                <span className="vd-field"><span className="vd-ico is-urgent">7</span><span><em>Return window</em><b>7 days</b></span></span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* 4 · Product types as arch cards */}
         <section className="l-section">
           <SectionHead label="Every kind of product" title="Bought, gifted or paid." soft="All in one place." />
           <div className="arches" tabIndex={0} aria-label="Product types, scroll sideways for more">
@@ -170,46 +183,80 @@ export function LandingPage() {
           </div>
         </section>
 
-        {/* 4 · Money band */}
-        <section className="band grad">
-          <div className="band-inner">
-            <div className="band-copy">
-              <h2 className="l-h2">Know where <span className="l-accent">every rupee is.</span></h2>
-              <p>Money spent on products, refunds still pending and collab fees still due, adding up on their own.</p>
+        {/* 5 · Earnings and invoices */}
+        <section className="l-section split is-flipped">
+          <div className="split-visual grad earn-demo" aria-hidden="true">
+            <div className="ed-card">
+              <div className="ed-top"><b>Earnings</b><span className="deadline-chip">FY 2026-27</span></div>
+              <span className="ed-label">Collab earnings</span>
+              <b className="ed-total num">₹1,24,000</b>
+              <span className="ed-label">₹18,000 still due · ₹9,450 refunds back</span>
+              <span className="ed-bars">{[20, 45, 30, 70, 55, 100, 40].map((h, i) => <i key={i} className={h >= 70 ? "is-hi" : ""} style={{ height: `${h}%` }} />)}</span>
             </div>
-            <div className="band-cards" aria-hidden="true">
-              <div className="glass band-total">
-                <span>Still to come back to you</span>
-                <b className="num">₹24,580</b>
-                <span className="band-bar"><i style={{ flex: 49 }} /><i style={{ flex: 12 }} /><i style={{ flex: 18 }} /></span>
-                <span className="band-key"><em>To return</em><em>Refunds</em><em>Collab fees</em></span>
-              </div>
-              <div className="glass"><span>Due this week</span><b className="num band-small">3</b></div>
-              <div className="glass band-late">
-                <Photo src="/landing/candle.jpg" size={40} />
-                <span><span>Iris Fragrances candle</span><b>Payment 10d late</b></span>
-              </div>
+            <div className="ed-invoice">
+              <em>INVOICE #0007</em>
+              <b>Minimalist · 2 Reels</b>
+              <span className="ed-sum"><span>Total</span><b>₹12,000</b></span>
+              <span className="ed-label">UPI: you@okbank</span>
             </div>
+            <span className="l-sticker ed-sticker"><span className="l-sticker-icon"><Icon name="check" size={13} /></span>Payment reminder sent</span>
+          </div>
+          <div className="split-copy">
+            <span className="l-pill"><i />For paid collabs</span>
+            <h2 className="l-h2">Know what <span className="l-soft">you earned.</span></h2>
+            <p>Collab earnings, refunds and gifted products add up by financial year, ready for tax time. Send a proper invoice in a tap, and a polite nudge when a brand pays late.</p>
+            <ul className="split-points">
+              <li><span className="sp-ico">₹</span>Collab earnings and what&apos;s still due, per brand</li>
+              <li><span className="sp-ico">#</span>Numbered invoices with your UPI or bank details</li>
+              <li><span className="sp-ico"><Icon name="send" size={13} /></span>Payment reminder by email or WhatsApp</li>
+            </ul>
           </div>
         </section>
 
-        {/* 5 · FAQ */}
+        {/* 6 · Free and Pro */}
+        <section className="l-section">
+          <SectionHead label="Plans" title="Start free." soft="Grow into Pro." />
+          <div className="plans">
+            <div className="plan">
+              <h3>Free <span className="plan-price">₹0</span></h3>
+              <p>For getting every review on track.</p>
+              <ul>{["Up to 25 products in progress", "Add by link or by voice", "Email reminders", "List and board views"].map((t) => <li key={t}><Icon name="check" size={14} />{t}</li>)}</ul>
+              <div className="plan-actions"><Link href="/auth/signup" className="btn btn-secondary">Start free</Link></div>
+            </div>
+            <div className="plan is-pro grad">
+              <span className="l-sticker plan-sticker"><span className="l-sticker-icon"><Icon name="check" size={13} /></span>₹99/mo early access</span>
+              <h3>Pro <span className="plan-price"><s>₹199</s> ₹99<em>/month</em></span></h3>
+              <p>For creators running paid collabs.</p>
+              <ul>{["Unlimited products", "Phone and WhatsApp reminders", "Calendar, brand reports, CSV export", "Earnings by financial year", "Invoices and payment reminders"].map((t) => <li key={t}><Icon name="check" size={14} />{t}</li>)}</ul>
+              <div className="plan-actions"><Link href="/pricing" className="btn btn-primary">See Pro plan details</Link></div>
+            </div>
+          </div>
+          <div className="plans-more"><Link href="/pricing" className="btn btn-quiet btn-sm">Compare all features <Icon name="chevronRight" size={14} /></Link></div>
+        </section>
+
+        {/* 7 · FAQ: the main questions; the rest are on /help */}
         <section className="l-section faq-wrap" id="faq">
           <div className="l-head">
             <span className="l-pill"><i />Questions</span>
             <h2 className="l-h2">Good <span className="l-soft">to know.</span></h2>
           </div>
-          <div className="faq">
-            {FAQ.map((f, i) => (
-              <details key={f.q} className="faq-item" open={i === 0}>
-                <summary>
-                  {f.q}
-                  <Icon name="plus" size={16} />
-                </summary>
-                <p>{f.a}</p>
-              </details>
+          {/* Two independent columns: opening an answer only pushes down the questions under it. */}
+          <div className="faq faq-cols">
+            {[MAIN_FAQ.slice(0, 3), MAIN_FAQ.slice(3, 6)].map((col, c) => (
+              <div key={c} className="faq-col">
+                {col.map((f, i) => (
+                  <details key={f.q} className="faq-item" open={c === 0 && i === 0}>
+                    <summary>
+                      {f.q}
+                      <Icon name="plus" size={16} />
+                    </summary>
+                    <p>{f.a}</p>
+                  </details>
+                ))}
+              </div>
             ))}
           </div>
+          <div className="faq-more"><Link href="/help" className="btn btn-secondary btn-sm">See all questions <Icon name="chevronRight" size={14} /></Link></div>
         </section>
 
       </main>

@@ -105,6 +105,8 @@ export function FooterTry({ rows }: { rows: PhoneRow[] }) {
           <nav className="foot-links" aria-label="Footer">
             <a href="#why">How it works</a>
             <a href="#faq">Questions</a>
+            <Link href="/pricing">Pricing</Link>
+            <Link href="/help">Help</Link>
             <Link href="/auth/signin">Sign in</Link>
             <Link href="/credits">Credits</Link>
           </nav>

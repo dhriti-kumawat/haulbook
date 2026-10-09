@@ -8,7 +8,7 @@ const LINKS: { href: string; label: string; icon: IconName }[] = [
   { href: "/home", label: "Home", icon: "home" },
   { href: "/products", label: "Products", icon: "box" },
   { href: "/shops", label: "Shops", icon: "store" },
-  { href: "/income", label: "Income", icon: "rupee" },
+  { href: "/earnings", label: "Earnings", icon: "rupee" },
 ];
 
 // Phones have no user menu in reach, so Settings gets its own tab there.
