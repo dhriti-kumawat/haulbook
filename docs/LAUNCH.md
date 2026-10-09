@@ -62,7 +62,8 @@ Business and Creator accounts; personal accounts see an error and can use anothe
 4. Until Meta approves the app (App Review, `instagram_business_basic`), only accounts you add
    as testers under App roles can sign in.
 
-Instagram does not share an email address, so these accounts get push notifications but not email reminders.
+Instagram does not share an email address. These accounts get push notifications, and can add a confirmed
+email in Settings → Account → Ways to sign in to get email reminders too.
 
 ## 7. Phone code sign-in (optional)
 

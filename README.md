@@ -25,7 +25,7 @@ For every product, Haulbook shows the one next step: film it, post it, return it
 - **Free and Pro**: Free covers up to 25 products in progress with email reminders, list and board views. Pro adds unlimited products, phone and WhatsApp reminders, calendar, brand reports, CSV export, earnings and invoices. Pro costs ₹199 a month, ₹99 during early access; until payments open, every account has Pro features unlocked.
 - **Shops & brands**: set each shop's return window in one tap, and print a report per brand with post links and fees.
 - **Reminders**: a short daily digest, sent only on days something is due or newly late, by email and/or as a phone or browser notification.
-- **Accounts**: one-tap Google sign-in, Instagram (Business and Creator accounts), a code sent by SMS to a mobile number, or email and password with a forgot-password flow.
+- **Accounts**: one-tap Google sign-in, Instagram (Business and Creator accounts), a code sent by SMS to a mobile number, or email and password with a forgot-password flow. In Settings, people can add a confirmed email or phone number and connect Google or Instagram to the same account.
 - **Help**: all questions, grouped, at /help; the landing page shows the main ones.
 - **Landing page**: visitors can paste a product link before signing up; it is waiting in Add product after they sign up.
 - **Phone install**: Haulbook can be added to the home screen and shows an offline page when there is no connection.

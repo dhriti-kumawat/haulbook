@@ -117,10 +117,13 @@ export const authOptions: NextAuthOptions = {
     // Someone could sign up with another person's email and a password before that person ever
     // uses Haulbook. When the real owner signs in with Google (which proves the email), drop any
     // password nobody verified, so the squatter's password stops working.
-    async linkAccount({ user, account }) {
+    // Only when Google's address is this account's address: a signed-in user connecting a Google
+    // account with a different email must keep their password.
+    async linkAccount({ user, account, profile }) {
       if (account.provider !== "google") return;
       const existing = await prisma.user.findUnique({ where: { id: user.id } });
-      if (existing && !existing.emailVerified) {
+      const googleEmail = profile?.email?.toLowerCase();
+      if (existing && !existing.emailVerified && googleEmail && googleEmail === existing.email?.toLowerCase()) {
         await prisma.user.update({
           where: { id: user.id },
           data: { emailVerified: new Date(), ...(existing.password ? { password: null, passwordChangedAt: new Date() } : {}) },

@@ -1628,3 +1628,18 @@ h1 .pro-chip { height: 24px; font-size: 12px; transform: translateY(-4px); }
 .phone-code { letter-spacing: 0.4em; font-size: 22px; text-align: center; font-variant-numeric: tabular-nums; }
 .phone-actions { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
 .phone-change { align-self: center; border: 0; background: none; color: var(--muted); font: inherit; font-size: 13px; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+
+/* Settings: ways to sign in */
+.logins { display: flex; flex-direction: column; gap: 8px; }
+.logins-title { font-size: 14px; font-weight: 700; }
+.logins ul { list-style: none; margin: 0; padding: 0; border: 1px solid var(--line); border-radius: var(--radius-sm); background: var(--surface); }
+.login-row { display: flex; align-items: center; gap: 12px; padding: 12px 14px; min-height: 56px; }
+.login-row + .login-row, .login-add + .login-row { border-top: 1px solid var(--line); }
+.login-label { flex: none; width: 84px; font-weight: 600; }
+.login-value { flex: 1; min-width: 0; overflow-wrap: anywhere; font-size: 14px; }
+.login-add { padding: 4px 14px 14px; }
+.login-add form { display: flex; flex-direction: column; gap: 8px; }
+@media (max-width: 520px) {
+  .login-row { flex-wrap: wrap; row-gap: 4px; }
+  .login-label { width: auto; flex-basis: 100%; font-size: 13px; color: var(--muted); }
+}
