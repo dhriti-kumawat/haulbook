@@ -1042,7 +1042,7 @@ button { font: inherit; color: inherit; }
   .foot-screen-head { font-size: 18px; }
   .foot-row-text b { font-size: 12px; }
   .foot-bar { flex-direction: row; justify-content: space-between; align-items: center; padding: 22px 0 28px; }
-  .faq-wrap .faq { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; align-items: start; }
+  .faq-wrap .faq { max-width: 820px; margin: 0 auto; }
 
   }
 

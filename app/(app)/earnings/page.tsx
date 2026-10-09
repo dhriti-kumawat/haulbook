@@ -27,7 +27,7 @@ export default function EarningsPage() {
       ["Date", "What", "Product", "Brand or shop", "Amount (₹)"].map(cell).join(","),
       ...s.items.map((i) => [i.date, i.kind, i.product, i.brand, i.amount].map(cell).join(",")),
       "",
-      ["Brand or shop", "Fees earned", "Fees due", "Refunds recovered", "Refunds pending", "PR value received", "Spent"].map(cell).join(","),
+      ["Brand or shop", "Collab earnings", "Still due", "Refunds recovered", "Refunds pending", "PR value received", "Spent"].map(cell).join(","),
       ...s.brands.map((b) => [b.brand, b.feesEarned, b.feesDue, b.refundsRecovered, b.refundsPending, b.prValue, b.spent].map(cell).join(",")),
     ];
     const url = URL.createObjectURL(new Blob(["﻿" + lines.join("\r\n")], { type: "text/csv;charset=utf-8" }));
@@ -41,7 +41,7 @@ export default function EarningsPage() {
       <div className="page-head">
         <div>
           <h1>Earnings <ProChip /></h1>
-          <p className="page-sub">Fees earned, refunds recovered and what&apos;s still owed, by financial year.</p>
+          <p className="page-sub">Collab earnings, refunds recovered and what&apos;s still owed, by financial year.</p>
         </div>
       </div>
 
@@ -58,7 +58,7 @@ export default function EarningsPage() {
 
         <div className="income-tiles" aria-busy={loading}>
           <div className="income-tile is-main">
-            <span>Collab fees earned</span>
+            <span>Collab earnings</span>
             <b className="num">{formatMoney(s.feesEarned)}</b>
             <em>{s.feesDue ? `${formatMoney(s.feesDue)} still due` : "Nothing due right now"}</em>
           </div>
@@ -80,8 +80,8 @@ export default function EarningsPage() {
         </div>
 
         <section className="panel-card">
-          <div className="panel-card-head"><h2>Fees by month</h2></div>
-          <div className="income-months" role="img" aria-label={`Collab fees per month in ${fyLabel(fy)}`}>
+          <div className="panel-card-head"><h2>Collab earnings by month</h2></div>
+          <div className="income-months" role="img" aria-label={`Collab earnings per month in ${fyLabel(fy)}`}>
             {s.months.map((v, i) => (
               <div key={MONTHS[i]} className="income-month">
                 <span className="income-bar-fill" style={{ height: `${Math.round((v / maxMonth) * 100)}%` }} title={formatMoney(v)} />
@@ -97,7 +97,7 @@ export default function EarningsPage() {
             <div className="income-table-wrap">
               <table className="report-table income-table">
                 <thead>
-                  <tr><th>Brand or shop</th><th>Fees earned</th><th>Fees due</th><th>Refunds</th><th>PR value</th></tr>
+                  <tr><th>Brand or shop</th><th>Earned</th><th>Still due</th><th>Refunds</th><th>PR value</th></tr>
                 </thead>
                 <tbody>
                   {s.brands.map((b) => (

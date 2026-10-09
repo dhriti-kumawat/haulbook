@@ -28,7 +28,7 @@ export interface IncomeSummary {
   spent: number;
   keptValue: number;
   prValue: number;
-  /** Fees earned per month, April first. */
+  /** Collab earnings per month, April first. */
   months: number[];
   brands: BrandIncome[];
   /** Line items behind the totals, for the CSV. */

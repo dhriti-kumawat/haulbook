@@ -53,7 +53,7 @@ const FEATURES = [
 const KINDS = [
   { type: "bought", label: "Bought", line: "Return it in time", text: "Return window and refund follow-up.", img: "/landing/headphones.jpg", alt: "Headphones" },
   { type: "pr", label: "PR", line: "Post it on time", text: "Posting date, deliverables and post link.", img: "/landing/phone.jpg", alt: "Phone" },
-  { type: "collab", label: "Paid collab", line: "Get paid for it", text: "Fee, deliverables and payment follow-up.", img: "/landing/vase.jpg", alt: "Ceramic vases" },
+  { type: "collab", label: "Paid collab", line: "Get paid for it", text: "Deliverables, earnings and payment follow-up.", img: "/landing/vase.jpg", alt: "Ceramic vases" },
 ];
 
 
@@ -187,7 +187,7 @@ export function LandingPage() {
           <div className="split-visual grad earn-demo" aria-hidden="true">
             <div className="ed-card">
               <div className="ed-top"><b>Earnings</b><span className="deadline-chip">FY 2026-27</span></div>
-              <span className="ed-label">Collab fees earned</span>
+              <span className="ed-label">Collab earnings</span>
               <b className="ed-total num">₹1,24,000</b>
               <span className="ed-label">₹18,000 still due · ₹9,450 refunds back</span>
               <span className="ed-bars">{[20, 45, 30, 70, 55, 100, 40].map((h, i) => <i key={i} className={h >= 70 ? "is-hi" : ""} style={{ height: `${h}%` }} />)}</span>
@@ -203,9 +203,9 @@ export function LandingPage() {
           <div className="split-copy">
             <span className="l-pill"><i />For paid collabs</span>
             <h2 className="l-h2">Know what <span className="l-soft">you earned.</span></h2>
-            <p>Fees, refunds and gifted products add up by financial year, ready for tax time. Send a proper invoice in a tap, and a polite nudge when a brand pays late.</p>
+            <p>Collab earnings, refunds and gifted products add up by financial year, ready for tax time. Send a proper invoice in a tap, and a polite nudge when a brand pays late.</p>
             <ul className="split-points">
-              <li><span className="sp-ico">₹</span>Fees earned and still due, per brand</li>
+              <li><span className="sp-ico">₹</span>Collab earnings and what&apos;s still due, per brand</li>
               <li><span className="sp-ico">#</span>Numbered invoices with your UPI or bank details</li>
               <li><span className="sp-ico"><Icon name="send" size={13} /></span>Payment reminder by email or WhatsApp</li>
             </ul>

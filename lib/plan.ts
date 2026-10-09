@@ -16,7 +16,7 @@ export const PRO_FEATURES: { key: ProFeature | "unlimited"; label: string }[] = 
   { key: "calendar", label: "Calendar view" },
   { key: "reports", label: "Brand reports" },
   { key: "export", label: "CSV export" },
-  { key: "income", label: "Earnings: fees, refunds and per-brand totals by financial year" },
+  { key: "income", label: "Earnings: collab earnings, refunds and per-brand totals by financial year" },
   { key: "invoices", label: "Invoices and payment follow-ups for paid collabs" },
 ];
 

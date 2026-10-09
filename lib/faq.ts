@@ -23,10 +23,10 @@ export const FAQ_GROUPS: { title: string; items: Faq[] }[] = [
   {
     title: "Earnings and invoices",
     items: [
-      { q: "What does Earnings show?", a: "Collab fees earned and still due, refunds recovered and pending, and the value of gifted products, for each financial year (April to March), with a spreadsheet for tax time." },
+      { q: "What does Earnings show?", a: "Collab earnings and what's still due, refunds recovered and pending, and the value of gifted products, for each financial year (April to March), with a spreadsheet for tax time." },
       { q: "Can I send invoices to brands?", a: "Yes. Each paid collab gets a numbered invoice with your details and UPI or bank info. Save it as a PDF and send it." },
       { q: "Does the invoice include GST?", a: "It shows your GSTIN and PAN if you add them. Amounts are what you enter; check tax details with your CA." },
-      { q: "Can I share a report with a brand?", a: "Yes. Each brand gets a report of what you received, what you posted with links, and fees. Print it or save it as a PDF." },
+      { q: "Can I share a report with a brand?", a: "Yes. Each brand gets a report of what you received, what you posted with links, and what you were paid. Print it or save it as a PDF." },
     ],
   },
   {
