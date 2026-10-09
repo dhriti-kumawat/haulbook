@@ -108,6 +108,8 @@ export function FooterTry({ rows }: { rows: PhoneRow[] }) {
             <Link href="/pricing">Pricing</Link>
             <Link href="/help">Help</Link>
             <Link href="/auth/signin">Sign in</Link>
+            <Link href="/privacy">Privacy</Link>
+            <Link href="/terms">Terms</Link>
             <Link href="/credits">Credits</Link>
           </nav>
         </div>

@@ -177,6 +177,8 @@ button { font: inherit; color: inherit; }
 .divider { display: flex; align-items: center; gap: 12px; color: var(--faint); font-size: 13px; }
 .divider::before, .divider::after { content: ""; flex: 1; height: 1px; background: var(--line); }
 .auth-switch { text-align: center; font-size: 14px; color: var(--muted); }
+.auth-legal { text-align: center; font-size: 12px; color: var(--muted); margin-top: -8px; }
+.auth-legal a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
 .auth-switch a { font-weight: 600; color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
 
 .label-row { display: flex; justify-content: space-between; align-items: baseline; }
@@ -1186,6 +1188,10 @@ button { font: inherit; color: inherit; }
 .credits h1 { margin: 0 0 16px; text-align: left; }
 .credits p { color: var(--muted); font-size: 16px; line-height: 1.6; margin: 0 0 14px; }
 .credits main a { color: var(--ink); text-decoration: underline; text-underline-offset: 2px; }
+.legal h2 { font-size: 20px; margin: 32px 0 10px; letter-spacing: -0.02em; }
+.legal ul { margin: 0 0 14px; padding-left: 20px; color: var(--muted); font-size: 16px; line-height: 1.6; }
+.legal li { margin-bottom: 6px; }
+.legal li b { color: var(--ink); }
 
 /* Sign-up / sign-in note for a link pasted on the landing page */
 .pending-note { display: flex; align-items: center; gap: 8px; padding: 10px 12px; border-radius: 12px; background: var(--accent-soft); color: var(--accent-ink); font-size: 13.5px; font-weight: 600; }
