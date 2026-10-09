@@ -1366,7 +1366,6 @@ button { font: inherit; color: inherit; }
 .btn-google:hover:not(:disabled) { border-color: var(--faint); background: var(--surface-2); }
 .btn-google svg { width: 20px; height: 20px; }
 .google-slot { height: 52px; }
-.google-dev-note { padding: 10px 12px; border-radius: 12px; border: 1px dashed var(--line-strong); }
 
 /* "Or just say it": describe a product out loud in Add product */
 .voice-add { display: flex; flex-direction: column; gap: 8px; }

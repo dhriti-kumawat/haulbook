@@ -37,7 +37,7 @@ function InstagramLogo() {
 
 /**
  * Quick ways in, shown first on sign in and sign up: Google and Instagram.
- * Each appears only when it's configured (in development a note lists what's missing).
+ * Each appears only when its keys are set (see docs/LAUNCH.md).
  */
 export function GoogleAuth({ label = "Continue with Google" }: { label?: string }) {
   const [providers, setProviders] = useState<Record<string, unknown> | null | "loading">("loading");
@@ -52,11 +52,7 @@ export function GoogleAuth({ label = "Continue with Google" }: { label?: string 
   if (providers === "loading") return <div className="google-slot" aria-hidden="true" />;
   const has = (id: string) => Boolean(providers && id in providers);
   const any = has("google") || has("instagram");
-  if (!any) {
-    return process.env.NODE_ENV === "development" ? (
-      <p className="hint google-dev-note">Google and Instagram sign-in appear here once their keys are set (see docs/LAUNCH.md).</p>
-    ) : null;
-  }
+  if (!any) return null;
   const go = (id: string) => {
     setBusy(id);
     signIn(id, { callbackUrl: "/home" });
