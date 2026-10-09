@@ -130,6 +130,9 @@ export default function SignUp() {
       <p className="auth-switch">
         Already have an account? <Link href="/auth/signin">Sign in</Link>
       </p>
+      <p className="auth-legal">
+        By creating an account you agree to the <Link href="/terms">Terms</Link> and <Link href="/privacy">Privacy policy</Link>.
+      </p>
     </div>
   );
 }
