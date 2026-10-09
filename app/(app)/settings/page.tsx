@@ -15,6 +15,7 @@ interface Settings {
   remindersEnabled: boolean;
   reminderDaysBefore: number;
   email: string | null;
+  phone?: string | null;
   planInfo?: PlanInfo;
 }
 
@@ -113,7 +114,7 @@ export default function SettingsPage() {
                 ))}
               </div>
               <span className="hint">
-                Emails go to {settings.email}. Late refunds and payments are repeated once a week, not every day.
+                {settings.email ? <>Emails go to {settings.email}.</> : <>Your account has no email address, so email reminders can't be sent. Use phone notifications below.</>} Late refunds and payments are repeated once a week, not every day.
               </span>
             </div>
 
@@ -159,7 +160,7 @@ export default function SettingsPage() {
               <div>
                 <h2>Account</h2>
                 <p className="muted">
-                  Signed in as {session?.user?.name ? <><b>{session.user.name}</b> · </> : null}{session?.user?.email ?? settings.email}
+                  Signed in as {session?.user?.name ? <><b>{session.user.name}</b> · </> : null}{session?.user?.email ?? settings.email ?? settings.phone ?? "Instagram"}
                 </p>
               </div>
             </div>

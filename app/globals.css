@@ -1609,3 +1609,12 @@ h1 .pro-chip { height: 24px; font-size: 12px; transform: translateY(-4px); }
 .plan-price { margin-left: 8px; font-size: 18px; font-weight: 800; color: var(--accent-ink); }
 .plan-price s { color: var(--faint); font-size: 14px; font-weight: 700; margin-right: 2px; }
 .plan-price em { font-style: normal; font-size: 13px; font-weight: 600; color: var(--muted); }
+
+/* Quick sign-in options and phone code */
+.quick-signin { display: flex; flex-direction: column; gap: 10px; }
+.phone-signin { display: flex; flex-direction: column; gap: 10px; padding: 14px; border-radius: 16px; background: var(--surface); border: 1px solid var(--line); }
+.phone-row { display: flex; gap: 8px; }
+.phone-cc { flex: none; display: grid; place-items: center; padding: 0 12px; border-radius: 12px; background: var(--surface-2); border: 1px solid var(--line); font-weight: 700; }
+.phone-code { letter-spacing: 0.4em; font-size: 22px; text-align: center; font-variant-numeric: tabular-nums; }
+.phone-actions { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.phone-change { align-self: center; border: 0; background: none; color: var(--muted); font: inherit; font-size: 13px; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }

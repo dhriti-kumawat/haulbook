@@ -6,6 +6,9 @@ import { prisma } from "./prisma";
 import bcrypt from "bcryptjs";
 import { clientIp, rateLimit } from "./rateLimit";
 import { MAX_PASSWORD } from "./passwordReset";
+import { InstagramProvider } from "./instagramProvider";
+import { checkPhoneCode, phoneAuthAvailable, userForPhone } from "./phoneAuth";
+import { normalizePhone } from "./whatsapp";
 
 /** A real bcrypt hash of a random string, compared against when an account doesn't exist. */
 const DUMMY_HASH = "$2a$12$oFFOTbozDH73d0fgqsoVHufsJ.0POQTsjNkAoT2KXrIt5pPTJzUCu";
@@ -22,6 +25,32 @@ export const authOptions: NextAuthOptions = {
             // Google confirms the email, so someone who signed up with a password can also use Google
             // (the linkAccount event below closes the "pre-registered account" takeover).
             allowDangerousEmailAccountLinking: true,
+          }),
+        ]
+      : []),
+    // Instagram sign-in is offered only when its keys are configured.
+    ...(process.env.INSTAGRAM_CLIENT_ID && process.env.INSTAGRAM_CLIENT_SECRET
+      ? [InstagramProvider(process.env.INSTAGRAM_CLIENT_ID, process.env.INSTAGRAM_CLIENT_SECRET)]
+      : []),
+    // Sign in with a code sent to your phone.
+    ...(phoneAuthAvailable()
+      ? [
+          CredentialsProvider({
+            id: "phone",
+            name: "Phone",
+            credentials: { phone: { label: "Phone", type: "tel" }, code: { label: "Code", type: "text" } },
+            async authorize(credentials, req) {
+              const phone = normalizePhone(credentials?.phone ?? "");
+              const code = (credentials?.code ?? "").trim();
+              if (!phone || !code) throw new Error("Enter your number and the code we sent");
+              const ip = clientIp((req?.headers ?? {}) as Record<string, string>);
+              if (!(await rateLimit(`phone-check-ip:${ip}`, 30, 15 * 60_000)) || !(await rateLimit(`phone-check:${phone}`, 6, 15 * 60_000))) {
+                throw new Error("Too many attempts. Ask for a new code in a few minutes.");
+              }
+              if (!(await checkPhoneCode(phone, code))) throw new Error("That code isn't right or has expired");
+              const user = await userForPhone(phone);
+              return { id: user.id, email: user.email, name: user.name };
+            },
           }),
         ]
       : []),

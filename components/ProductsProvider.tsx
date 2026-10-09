@@ -32,6 +32,7 @@ export interface UserSettings {
   reminderDaysBefore: number;
   onboarded: boolean;
   email: string | null;
+  phone?: string | null;
   planInfo: PlanInfo;
 }
 

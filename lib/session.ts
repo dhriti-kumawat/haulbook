@@ -6,12 +6,13 @@ import { prisma } from "./prisma";
 /** Returns the signed-in user, or a ready-made error response. */
 export async function requireUser() {
   const session = await getServerSession(authOptions);
-  if (!session?.user?.email) {
+  // Instagram and phone accounts may have no email, so the account id is what identifies them.
+  if (!session?.user?.id && !session?.user?.email) {
     return { error: NextResponse.json({ error: "Unauthorized" }, { status: 401 }) };
   }
   const user = session.user.id
     ? await prisma.user.findUnique({ where: { id: session.user.id } })
-    : await prisma.user.findUnique({ where: { email: session.user.email } });
+    : await prisma.user.findUnique({ where: { email: session.user.email! } });
   if (!user) {
     return { error: NextResponse.json({ error: "User not found" }, { status: 404 }) };
   }

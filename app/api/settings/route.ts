@@ -3,11 +3,12 @@ import { requireUser } from "@/lib/session";
 import { NextRequest, NextResponse } from "next/server";
 import { planFor } from "@/lib/planServer";
 
-const pick = (u: { remindersEnabled: boolean; reminderDaysBefore: number; onboardedAt: Date | null; email: string | null }) => ({
+const pick = (u: { remindersEnabled: boolean; reminderDaysBefore: number; onboardedAt: Date | null; email: string | null; phone?: string | null }) => ({
   remindersEnabled: u.remindersEnabled,
   reminderDaysBefore: u.reminderDaysBefore,
   onboarded: Boolean(u.onboardedAt),
   email: u.email,
+  phone: u.phone ?? null,
 });
 
 export async function GET() {
