@@ -1551,3 +1551,57 @@ h1 .pro-chip { height: 24px; font-size: 12px; transform: translateY(-4px); }
   .plan.is-pro { order: 0; }
   .plan h3 { font-size: 22px; }
 }
+
+/* Pricing page */
+.pricing main { max-width: 980px; margin: 0 auto; padding: 24px 0 72px; }
+.pricing-head { margin-bottom: 28px; }
+.pricing-head .l-h2 { font-size: clamp(34px, 5vw, 50px); }
+.pricing-head p { color: var(--muted); font-size: 16px; margin: 12px 0 0; }
+.price-cards { display: grid; gap: 12px; }
+.price-card { position: relative; overflow: hidden; display: flex; flex-direction: column; gap: 14px; padding: 24px; border-radius: 26px; border: 1px solid var(--line); }
+.price-card:not(.is-pro) { background: var(--surface); }
+.price-card.is-pro { border-color: transparent; order: -1; }
+.price-card h2 { font-size: 22px; letter-spacing: -0.03em; }
+.price-sub { color: var(--muted); font-size: 14px; margin: -8px 0 0; }
+.price-amount { display: flex; align-items: baseline; gap: 8px; }
+.price-amount b { font-size: 44px; letter-spacing: -0.05em; line-height: 1; }
+.price-amount span { color: var(--muted); font-size: 14px; }
+.price-card .btn-block { height: 48px; font-size: 15px; }
+.price-card ul { list-style: none; margin: 4px 0 0; padding: 0; display: flex; flex-direction: column; gap: 10px; font-size: 14.5px; }
+.price-card li { display: flex; align-items: center; gap: 8px; }
+.price-card li svg { flex: none; color: var(--ok); }
+.price-everything { font-weight: 700; }
+.price-note { margin: 4px 0 0; font-size: 12.5px; color: var(--muted); }
+.price-sticker { top: 18px; right: 18px; transform: rotate(3deg); padding-left: 6px; }
+.pricing-section { margin-top: 48px; }
+.pricing-h { font-size: 24px; letter-spacing: -0.03em; margin: 0 0 14px; text-align: center; }
+.pricing-faq { max-width: 760px; margin: 0 auto; }
+.pc-wrap { overflow-x: auto; border-radius: 20px; border: 1px solid var(--line); background: var(--surface); }
+.pc { width: 100%; border-collapse: collapse; font-size: 14px; }
+.pc thead th { position: sticky; top: 0; background: var(--surface); padding: 14px 12px; font-size: 14px; text-align: center; border-bottom: 1px solid var(--line); }
+.pc thead th:first-child { text-align: left; }
+.pc tbody th { text-align: left; font-weight: 500; padding: 12px; }
+.pc td { text-align: center; padding: 12px; width: 24%; }
+.pc tr + tr th, .pc tr + tr td { border-top: 1px solid var(--line); }
+.pc .pc-group th { padding: 18px 12px 8px; font-size: 12px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); background: var(--surface-2); }
+.pc-yes { display: inline-grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: var(--ok-soft); color: var(--ok); }
+.pc-no { color: var(--faint); }
+.pc-text { font-weight: 700; font-size: 13px; }
+@media (min-width: 900px) {
+  .price-cards { grid-template-columns: 1fr 1fr; gap: 16px; }
+  .price-card { padding: 32px; border-radius: 30px; }
+  .price-card.is-pro { order: 0; }
+  .pricing-section { margin-top: 72px; }
+  .pc { font-size: 15px; }
+  .pc tbody th, .pc td { padding: 14px 20px; }
+}
+@media (max-width: 640px) {
+  .pc td { width: 22%; padding: 10px 6px; }
+  .pc tbody th { padding: 10px; font-size: 13px; }
+}
+
+/* Landing plans: buttons */
+.plan { display: flex; flex-direction: column; }
+.plan-actions { display: flex; flex-direction: column; gap: 8px; margin-top: auto; padding-top: 18px; }
+.plan-actions .btn { height: 44px; }
+.plans-more { display: flex; justify-content: center; margin-top: 16px; }

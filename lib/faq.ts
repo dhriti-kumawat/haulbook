@@ -30,6 +30,13 @@ export const FAQ_GROUPS: { title: string; items: Faq[] }[] = [
     ],
   },
   {
+    title: "Plans",
+    items: [
+      { q: "How much does Pro cost?", a: "Nothing during early access: every account gets Pro. We'll share Pro pricing well before it starts, and you can stay on Free." },
+      { q: "What happens to my products if I go back to Free?", a: "Nothing is deleted. You keep everything; Free just limits how many products can be in progress and turns off Pro-only features." },
+    ],
+  },
+  {
     title: "Privacy",
     items: [
       { q: "Who can see my products?", a: "Only you. Your products, earnings and invoices are private to your account." },
@@ -42,11 +49,12 @@ export const FAQ_GROUPS: { title: string; items: Faq[] }[] = [
 const ALL = FAQ_GROUPS.flatMap((g) => g.items);
 const pick = (q: string) => ALL.find((f) => f.q === q)!;
 
-/** The handful shown on the landing page; the rest live on /help. */
+/** The six shown on the landing page (two columns of three); the rest live on /help. */
 export const MAIN_FAQ: Faq[] = [
   pick("Is Haulbook free?"),
   pick("Do I need to install anything?"),
   pick("Which shops does adding by link work with?"),
+  pick("How does the return countdown work?"),
   pick("Who can see my products?"),
   pick("What happens to what I say?"),
 ];

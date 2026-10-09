@@ -43,3 +43,37 @@ export function planInfo(user: { plan: string }, activeCount: number) {
 export type PlanInfo = ReturnType<typeof planInfo>;
 
 export const PRO_REQUIRED = (what: string) => ({ error: `${what} is part of Haulbook Pro.`, upgrade: true });
+
+/** Feature-by-feature comparison, grouped, for the pricing page and the in-app plans page. */
+export const PLAN_GROUPS: { title: string; rows: { label: string; free: string | boolean; pro: string | boolean }[] }[] = [
+  {
+    title: "Tracking",
+    rows: [
+      { label: "Products in progress", free: `Up to ${FREE_ACTIVE_LIMIT}`, pro: "Unlimited" },
+      { label: "Bought, PR and paid collab products", free: true, pro: true },
+      { label: "Add by link", free: true, pro: true },
+      { label: "Add by voice (English and Hinglish)", free: true, pro: true },
+      { label: "List and board views", free: true, pro: true },
+      { label: "Calendar view", free: false, pro: true },
+    ],
+  },
+  {
+    title: "Reminders",
+    rows: [
+      { label: "Return, posting and payment countdowns", free: true, pro: true },
+      { label: "Email reminders", free: true, pro: true },
+      { label: "Phone notifications", free: false, pro: true },
+      { label: "WhatsApp reminders", free: false, pro: true },
+    ],
+  },
+  {
+    title: "Money and brands",
+    rows: [
+      { label: "Earnings by financial year", free: false, pro: true },
+      { label: "Invoices for paid collabs", free: false, pro: true },
+      { label: "Payment reminders", free: false, pro: true },
+      { label: "Brand reports", free: false, pro: true },
+      { label: "CSV export", free: false, pro: true },
+    ],
+  },
+];

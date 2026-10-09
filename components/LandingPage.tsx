@@ -64,6 +64,7 @@ export function LandingPage() {
       <header className="l-header">
         <Link href="/" className="brand"><BrandMark /> Haulbook</Link>
         <nav className="l-nav" aria-label="Account">
+          <Link href="/pricing" className="btn btn-ghost btn-sm l-nav-pricing">Pricing</Link>
           <Link href="/auth/signin" className="btn btn-ghost btn-sm">Sign in</Link>
           <Link href="/auth/signup" className="btn btn-primary btn-sm">Get started</Link>
         </nav>
@@ -220,14 +221,17 @@ export function LandingPage() {
               <h3>Free</h3>
               <p>For getting every review on track.</p>
               <ul>{["Up to 25 products in progress", "Add by link or by voice", "Email reminders", "List and board views"].map((t) => <li key={t}><Icon name="check" size={14} />{t}</li>)}</ul>
+              <div className="plan-actions"><Link href="/auth/signup" className="btn btn-secondary">Start free</Link></div>
             </div>
             <div className="plan is-pro grad">
               <span className="l-sticker plan-sticker"><span className="l-sticker-icon"><Icon name="check" size={13} /></span>Free in early access</span>
               <h3>Pro</h3>
               <p>For creators running paid collabs.</p>
               <ul>{["Unlimited products", "Phone and WhatsApp reminders", "Calendar, brand reports, CSV export", "Earnings by financial year", "Invoices and payment reminders"].map((t) => <li key={t}><Icon name="check" size={14} />{t}</li>)}</ul>
+              <div className="plan-actions"><Link href="/pricing" className="btn btn-primary">See Pro plan details</Link></div>
             </div>
           </div>
+          <div className="plans-more"><Link href="/pricing" className="btn btn-quiet btn-sm">Compare all features <Icon name="chevronRight" size={14} /></Link></div>
         </section>
 
         {/* 7 · FAQ: the main questions; the rest are on /help */}
@@ -238,7 +242,7 @@ export function LandingPage() {
           </div>
           {/* Two independent columns: opening an answer only pushes down the questions under it. */}
           <div className="faq faq-cols">
-            {[MAIN_FAQ.slice(0, 3), MAIN_FAQ.slice(3)].map((col, c) => (
+            {[MAIN_FAQ.slice(0, 3), MAIN_FAQ.slice(3, 6)].map((col, c) => (
               <div key={c} className="faq-col">
                 {col.map((f, i) => (
                   <details key={f.q} className="faq-item" open={c === 0 && i === 0}>
