@@ -41,6 +41,10 @@ model User {
   billingGstin       String?
   billingPan         String?
 
+  /// Phone sign-in: verified mobile number in E.164 (+91…).
+  phone              String?   @unique
+  phoneVerifiedAt    DateTime?
+
   /// WhatsApp reminders: number in E.164 (+91…) and when the user agreed to messages.
   whatsappNumber     String?
   whatsappOptInAt    DateTime?

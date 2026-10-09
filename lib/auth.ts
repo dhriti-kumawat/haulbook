@@ -6,6 +6,9 @@ import { prisma } from "./prisma";
 import bcrypt from "bcryptjs";
 import { clientIp, rateLimit } from "./rateLimit";
 import { MAX_PASSWORD } from "./passwordReset";
+import { InstagramProvider } from "./instagramProvider";
+import { checkPhoneCode, phoneAuthAvailable, userForPhone } from "./phoneAuth";
+import { normalizePhone } from "./whatsapp";
 
 /** A real bcrypt hash of a random string, compared against when an account doesn't exist. */
 const DUMMY_HASH = "$2a$12$oFFOTbozDH73d0fgqsoVHufsJ.0POQTsjNkAoT2KXrIt5pPTJzUCu";
@@ -22,6 +25,32 @@ export const authOptions: NextAuthOptions = {
             // Google confirms the email, so someone who signed up with a password can also use Google
             // (the linkAccount event below closes the "pre-registered account" takeover).
             allowDangerousEmailAccountLinking: true,
+          }),
+        ]
+      : []),
+    // Instagram sign-in is offered only when its keys are configured.
+    ...(process.env.INSTAGRAM_CLIENT_ID && process.env.INSTAGRAM_CLIENT_SECRET
+      ? [InstagramProvider(process.env.INSTAGRAM_CLIENT_ID, process.env.INSTAGRAM_CLIENT_SECRET)]
+      : []),
+    // Sign in with a code sent to your phone.
+    ...(phoneAuthAvailable()
+      ? [
+          CredentialsProvider({
+            id: "phone",
+            name: "Phone",
+            credentials: { phone: { label: "Phone", type: "tel" }, code: { label: "Code", type: "text" } },
+            async authorize(credentials, req) {
+              const phone = normalizePhone(credentials?.phone ?? "");
+              const code = (credentials?.code ?? "").trim();
+              if (!phone || !code) throw new Error("Enter your number and the code we sent");
+              const ip = clientIp((req?.headers ?? {}) as Record<string, string>);
+              if (!(await rateLimit(`phone-check-ip:${ip}`, 30, 15 * 60_000)) || !(await rateLimit(`phone-check:${phone}`, 6, 15 * 60_000))) {
+                throw new Error("Too many attempts. Ask for a new code in a few minutes.");
+              }
+              if (!(await checkPhoneCode(phone, code))) throw new Error("That code isn't right or has expired");
+              const user = await userForPhone(phone);
+              return { id: user.id, email: user.email, name: user.name };
+            },
           }),
         ]
       : []),
@@ -88,10 +117,13 @@ export const authOptions: NextAuthOptions = {
     // Someone could sign up with another person's email and a password before that person ever
     // uses Haulbook. When the real owner signs in with Google (which proves the email), drop any
     // password nobody verified, so the squatter's password stops working.
-    async linkAccount({ user, account }) {
+    // Only when Google's address is this account's address: a signed-in user connecting a Google
+    // account with a different email must keep their password.
+    async linkAccount({ user, account, profile }) {
       if (account.provider !== "google") return;
       const existing = await prisma.user.findUnique({ where: { id: user.id } });
-      if (existing && !existing.emailVerified) {
+      const googleEmail = profile?.email?.toLowerCase();
+      if (existing && !existing.emailVerified && googleEmail && googleEmail === existing.email?.toLowerCase()) {
         await prisma.user.update({
           where: { id: user.id },
           data: { emailVerified: new Date(), ...(existing.password ? { password: null, passwordChangedAt: new Date() } : {}) },

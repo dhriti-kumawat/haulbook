@@ -3,17 +3,24 @@ import { requireUser } from "@/lib/session";
 import { NextRequest, NextResponse } from "next/server";
 import { planFor } from "@/lib/planServer";
 
-const pick = (u: { remindersEnabled: boolean; reminderDaysBefore: number; onboardedAt: Date | null; email: string | null }) => ({
+const pick = (u: { remindersEnabled: boolean; reminderDaysBefore: number; onboardedAt: Date | null; email: string | null; phone?: string | null }) => ({
   remindersEnabled: u.remindersEnabled,
   reminderDaysBefore: u.reminderDaysBefore,
   onboarded: Boolean(u.onboardedAt),
   email: u.email,
+  phone: u.phone ?? null,
 });
+
+/** How the person can sign in: password, phone, and connected Google or Instagram accounts. */
+async function logins(u: { id: string; password: string | null; phone: string | null }) {
+  const accounts = await prisma.account.findMany({ where: { userId: u.id }, select: { provider: true } });
+  return { password: Boolean(u.password), phone: Boolean(u.phone), providers: accounts.map((a) => a.provider) };
+}
 
 export async function GET() {
   const { user, error } = await requireUser();
   if (error) return error;
-  return NextResponse.json({ ...pick(user), planInfo: await planFor(user) });
+  return NextResponse.json({ ...pick(user), planInfo: await planFor(user), logins: await logins(user) });
 }
 
 export async function PATCH(req: NextRequest) {
@@ -32,5 +39,5 @@ export async function PATCH(req: NextRequest) {
   }
   if (body.onboarded === true) data.onboardedAt = new Date();
   const updated = await prisma.user.update({ where: { id: user.id }, data });
-  return NextResponse.json({ ...pick(updated), planInfo: await planFor(updated) });
+  return NextResponse.json({ ...pick(updated), planInfo: await planFor(updated), logins: await logins(updated) });
 }

@@ -14,7 +14,9 @@ export function localDay(d: Date | string = new Date()) {
 }
 
 export function initials(name?: string | null, email?: string | null) {
-  const source = (name || email || "?").trim();
+  // Phone and Instagram accounts can have neither; "?" looked like a help button.
+  const source = (name || email || "").trim();
+  if (!source) return "Me";
   const parts = source.split(/[\s@._-]+/).filter(Boolean);
   return ((parts[0]?.[0] ?? "?") + (parts[1]?.[0] ?? "")).toUpperCase();
 }

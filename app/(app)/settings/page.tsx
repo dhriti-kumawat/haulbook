@@ -10,12 +10,15 @@ import { PlanCard } from "@/components/PlanCard";
 import { BillingSettings } from "@/components/BillingSettings";
 import { WhatsAppSettings } from "@/components/WhatsAppSettings";
 import type { PlanInfo } from "@/lib/plan";
+import { SignInMethods, type Logins } from "@/components/SignInMethods";
 
 interface Settings {
   remindersEnabled: boolean;
   reminderDaysBefore: number;
   email: string | null;
+  phone?: string | null;
   planInfo?: PlanInfo;
+  logins?: Logins;
 }
 
 const DAY_OPTIONS = [1, 2, 3, 5, 7];
@@ -26,11 +29,13 @@ export default function SettingsPage() {
   const [settings, setSettings] = useState<Settings | null>(null);
   const [testState, setTestState] = useState<{ busy: boolean; message?: string; devOutbox?: boolean }>({ busy: false });
 
-  useEffect(() => {
+  const load = () =>
     fetch("/api/settings")
       .then((r) => (r.ok ? r.json() : null))
       .then(setSettings)
       .catch(() => setSettings(null));
+  useEffect(() => {
+    load();
   }, []);
 
   async function save(patch: Partial<Settings>) {
@@ -113,7 +118,7 @@ export default function SettingsPage() {
                 ))}
               </div>
               <span className="hint">
-                Emails go to {settings.email}. Late refunds and payments are repeated once a week, not every day.
+                {settings.email ? <>Emails go to {settings.email}.</> : <>Your account has no email address, so email reminders can't be sent. Use phone notifications below.</>} Late refunds and payments are repeated once a week, not every day.
               </span>
             </div>
 
@@ -159,10 +164,11 @@ export default function SettingsPage() {
               <div>
                 <h2>Account</h2>
                 <p className="muted">
-                  Signed in as {session?.user?.name ? <><b>{session.user.name}</b> · </> : null}{session?.user?.email ?? settings.email}
+                  Signed in as {session?.user?.name ? <><b>{session.user.name}</b> · </> : null}{session?.user?.email ?? settings.email ?? settings.phone?.replace(/^\+91(\d{5})(\d{5})$/, "+91 $1 $2") ?? "Instagram"}
                 </p>
               </div>
             </div>
+            <SignInMethods email={settings.email} phone={settings.phone ?? null} logins={settings.logins} onChange={load} />
             <div>
               <button type="button" className="btn btn-secondary btn-sm" onClick={() => signOut({ callbackUrl: "/" })}>
                 <Icon name="logout" size={14} /> Sign out

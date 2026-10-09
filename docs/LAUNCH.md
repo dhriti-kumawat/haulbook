@@ -48,9 +48,36 @@ The fastest way in: one tap creates the account or signs in. It's the first opti
 Someone who signed up with email and password can later use Google with the same address; it opens
 the same account. Errors (cancelled, Google unreachable) come back to the sign-in page with a message.
 
+## 6. Instagram sign-in (optional)
+
+The Instagram button shows only when both keys are set. Instagram only allows sign-in for
+Business and Creator accounts; personal accounts see an error and can use another option.
+
+1. At developers.facebook.com, create an app of type "Business", then add the product
+   "Instagram" and choose "API setup with Instagram login".
+2. Under "Set up Instagram business login", add the redirect URL
+   `https://<your-domain>/api/auth/callback/instagram` (and `http://localhost:3000/api/auth/callback/instagram`).
+3. Copy the Instagram app ID and secret (not the Facebook app ID) into `INSTAGRAM_CLIENT_ID`
+   and `INSTAGRAM_CLIENT_SECRET`, then restart.
+4. Until Meta approves the app (App Review, `instagram_business_basic`), only accounts you add
+   as testers under App roles can sign in.
+
+Instagram does not share an email address. These accounts get push notifications, and can add a confirmed
+email in Settings → Account → Ways to sign in to get email reminders too.
+
+## 7. Phone code sign-in (optional)
+
+Users enter an Indian mobile number and get a 6-digit code by SMS. A new number creates an account.
+
+1. Create a Twilio account, then Verify → Services → Create a service named Haulbook (SMS channel).
+2. Set `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN` and `TWILIO_VERIFY_SID` (the service's `VA…` ID).
+3. Each number can request 4 codes an hour, and each address 10, to limit SMS costs.
+
+In development without these keys, the code is printed in the server log
+(`[phone-auth] Development code for …`) instead of being sent.
+
 ## Known limits to revisit as you grow
 
-- **Rate limits** are kept in server memory, so each Vercel instance counts on its own. For strict limits across instances, move them to Upstash Redis (`lib/rateLimit.ts`).
 - **Uploaded photos** are stored inside the database as small JPEGs (about 800px, under 300 KB each). At scale, move them to file storage such as Vercel Blob or S3.
 - **Link import:** some shops (for example Nykaa, and sometimes Flipkart) block automated page reads. Users can upload a photo instead.
 
