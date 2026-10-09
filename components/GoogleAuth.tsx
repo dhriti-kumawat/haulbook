@@ -3,7 +3,6 @@
 import { getProviders, signIn } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { GoogleLogo, Icon } from "./Icon";
-import { PhoneSignIn } from "./PhoneSignIn";
 
 /** Messages for the `?error=` codes NextAuth sends back to the sign-in page. */
 const AUTH_ERRORS: Record<string, string> = {
@@ -37,13 +36,12 @@ function InstagramLogo() {
 }
 
 /**
- * Quick ways in, shown first on sign in and sign up: Google, Instagram and a code to your phone.
+ * Quick ways in, shown first on sign in and sign up: Google and Instagram.
  * Each appears only when it's configured (in development a note lists what's missing).
  */
 export function GoogleAuth({ label = "Continue with Google" }: { label?: string }) {
   const [providers, setProviders] = useState<Record<string, unknown> | null | "loading">("loading");
   const [busy, setBusy] = useState<string | null>(null);
-  const [phoneOpen, setPhoneOpen] = useState(false);
 
   useEffect(() => {
     getProviders()
@@ -53,10 +51,10 @@ export function GoogleAuth({ label = "Continue with Google" }: { label?: string 
 
   if (providers === "loading") return <div className="google-slot" aria-hidden="true" />;
   const has = (id: string) => Boolean(providers && id in providers);
-  const any = has("google") || has("instagram") || has("phone");
+  const any = has("google") || has("instagram");
   if (!any) {
     return process.env.NODE_ENV === "development" ? (
-      <p className="hint google-dev-note">Google, Instagram and phone sign-in appear here once their keys are set (see docs/LAUNCH.md).</p>
+      <p className="hint google-dev-note">Google and Instagram sign-in appear here once their keys are set (see docs/LAUNCH.md).</p>
     ) : null;
   }
   const go = (id: string) => {
@@ -76,12 +74,6 @@ export function GoogleAuth({ label = "Continue with Google" }: { label?: string 
             <InstagramLogo /> {busy === "instagram" ? "Opening Instagram…" : label.replace("Google", "Instagram")}
           </button>
         )}
-        {has("phone") && !phoneOpen && (
-          <button type="button" className="btn btn-google btn-block" onClick={() => setPhoneOpen(true)}>
-            <Icon name="phone" size={18} /> {label.startsWith("Sign up") ? "Sign up with phone number" : "Continue with phone number"}
-          </button>
-        )}
-        {phoneOpen && <PhoneSignIn onCancel={() => setPhoneOpen(false)} />}
       </div>
       <div className="divider">or use email</div>
     </>

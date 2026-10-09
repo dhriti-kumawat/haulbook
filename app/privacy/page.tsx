@@ -22,7 +22,7 @@ export default function Privacy() {
 
         <h2>What we store</h2>
         <ul>
-          <li><b>Your account:</b> your name, email address, mobile number and profile photo, depending on how you sign in. If you use a password, only a scrambled (hashed) version is stored.</li>
+          <li><b>Your account:</b> your name, email address and profile photo, depending on how you sign in. If you use a password, only a scrambled (hashed) version is stored.</li>
           <li><b>What you add:</b> products, shop links, photos you upload, dates, amounts, brands, notes and post links.</li>
           <li><b>Invoice details</b> you choose to fill in, such as your name, address, UPI ID, bank details, GSTIN and PAN.</li>
           <li><b>Reminder settings:</b> your reminder choices, browser notification subscriptions and, if you turn it on, your WhatsApp number and consent.</li>
@@ -46,7 +46,6 @@ export default function Privacy() {
           <li><b>Vercel</b> hosts the website.</li>
           <li><b>Supabase</b> stores the database, in its Mumbai (India) region.</li>
           <li><b>Resend</b> sends emails such as reminders and sign-in codes.</li>
-          <li><b>Twilio</b> sends sign-in codes by SMS, if you sign in with your phone.</li>
           <li><b>Meta (WhatsApp)</b> delivers reminders, only if you turn WhatsApp reminders on.</li>
           <li><b>Anthropic</b> turns what you say in &ldquo;Add by voice&rdquo; into product details. Only the text of what you said is sent.</li>
           <li><b>Jina Reader and Microlink</b> may receive a product link you paste, to read the product name, photo and price when a shop blocks a direct read.</li>
@@ -61,7 +60,7 @@ export default function Privacy() {
           <li>Turn email, phone and WhatsApp reminders off in Settings at any time.</li>
           <li>
             To delete your account and everything in it, email <a href={`mailto:${CONTACT}`}>{CONTACT}</a> from the address on your account,
-            or tell us your sign-in phone number. We delete it within 30 days.
+            or tell us your Instagram username. We delete it within 30 days.
           </li>
         </ul>
 

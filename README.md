@@ -25,7 +25,7 @@ For every product, Haulbook shows the one next step: film it, post it, return it
 - **Free and Pro**: Free covers up to 25 products in progress with email reminders, list and board views. Pro adds unlimited products, phone and WhatsApp reminders, calendar, brand reports, CSV export, earnings and invoices. Pro costs ₹199 a month, ₹99 during early access; until payments open, every account has Pro features unlocked.
 - **Shops & brands**: set each shop's return window in one tap, and print a report per brand with post links and fees.
 - **Reminders**: a short daily digest, sent only on days something is due or newly late, by email and/or as a phone or browser notification.
-- **Accounts**: one-tap Google sign-in, Instagram (Business and Creator accounts), a code sent by SMS to a mobile number, or email and password with a forgot-password flow. In Settings, people can add a confirmed email or phone number and connect Google or Instagram to the same account.
+- **Accounts**: one-tap Google sign-in, Instagram (Business and Creator accounts), or email and password with a forgot-password flow. In Settings, people can add a confirmed email and connect Google or Instagram to the same account.
 - **Help**: all questions, grouped, at /help; the landing page shows the main ones.
 - **Landing page**: visitors can paste a product link before signing up; it is waiting in Add product after they sign up.
 - **Phone install**: Haulbook can be added to the home screen and shows an offline page when there is no connection.
@@ -73,7 +73,7 @@ These steps need accounts that only you can create. See `docs/LAUNCH.md` for eac
 3. **Email:** create a Resend account, verify your sending domain, then set `RESEND_API_KEY` and `EMAIL_FROM`.
 4. **Reminders:** set `CRON_SECRET`. `vercel.json` already runs the reminder job daily at 08:00 IST.
 5. **Google sign-in:** create an OAuth client in Google Cloud, then set `GOOGLE_ID` and `GOOGLE_SECRET`.
-6. **Instagram and phone sign-in (optional):** set `INSTAGRAM_CLIENT_ID`/`INSTAGRAM_CLIENT_SECRET` (Meta app) and `TWILIO_ACCOUNT_SID`/`TWILIO_AUTH_TOKEN`/`TWILIO_VERIFY_SID` (Twilio Verify).
+6. **Instagram sign-in (optional):** set `INSTAGRAM_CLIENT_ID` and `INSTAGRAM_CLIENT_SECRET` (Meta app).
 7. **Notifications:** set `NEXT_PUBLIC_VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY` and `VAPID_SUBJECT`.
 8. **Voice add:** set `ANTHROPIC_API_KEY`. Without it, a simpler built-in reader fills in what it can.
 9. **Link import (optional):** set `READER_API_KEY` and `MICROLINK_API_KEY` for higher limits.

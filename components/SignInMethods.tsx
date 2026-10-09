@@ -4,14 +4,12 @@ import { getProviders, signIn } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { FieldError } from "./FieldError";
 
-export interface Logins { password: boolean; phone: boolean; providers: string[] }
+export interface Logins { password: boolean; providers: string[] }
 
-type Kind = "email" | "phone";
-
-const pretty = (p: string) => p.replace(/^\+91(\d{5})(\d{5})$/, "+91 $1 $2");
+type Kind = "email";
 
 /** Account card rows: every way to sign in, with add and connect actions. */
-export function SignInMethods({ email, phone, logins, onChange }: { email: string | null; phone: string | null; logins?: Logins; onChange: () => void }) {
+export function SignInMethods({ email, logins, onChange }: { email: string | null; logins?: Logins; onChange: () => void }) {
   const [available, setAvailable] = useState<string[]>([]);
   const [open, setOpen] = useState<Kind | null>(null);
 
@@ -39,13 +37,6 @@ export function SignInMethods({ email, phone, logins, onChange }: { email: strin
         )}
         {open === "email" && <AddWithCode kind="email" onDone={() => { setOpen(null); onChange(); }} onCancel={() => setOpen(null)} />}
 
-        {available.includes("phone") && row(
-          "Phone",
-          phone ? pretty(phone) : <span className="muted">Not added</span>,
-          open !== "phone" && <button type="button" className="btn btn-secondary btn-sm" onClick={() => setOpen("phone")}>{phone ? "Change" : "Add phone"}</button>,
-        )}
-        {open === "phone" && <AddWithCode kind="phone" onDone={() => { setOpen(null); onChange(); }} onCancel={() => setOpen(null)} />}
-
         {available.includes("google") && row(
           "Google",
           connected("google") ? "Connected" : <span className="muted">Not connected</span>,
@@ -61,7 +52,7 @@ export function SignInMethods({ email, phone, logins, onChange }: { email: strin
   );
 }
 
-/** Two steps: the address or number, then the 6-digit code sent to it. */
+/** Two steps: the address, then the 6-digit code sent to it. */
 function AddWithCode({ kind, onDone, onCancel }: { kind: Kind; onDone: () => void; onCancel: () => void }) {
   const [value, setValue] = useState("");
   const [code, setCode] = useState("");
@@ -96,14 +87,14 @@ function AddWithCode({ kind, onDone, onCancel }: { kind: Kind; onDone: () => voi
       >
         {!sent ? (
           <>
-            <label className="label" htmlFor={id}>{kind === "email" ? "Email address" : "Mobile number"}</label>
+            <label className="label" htmlFor={id}>Email address</label>
             <input
               id={id}
               className="input"
-              type={kind === "email" ? "email" : "tel"}
-              inputMode={kind === "email" ? "email" : "tel"}
-              autoComplete={kind === "email" ? "email" : "tel-national"}
-              placeholder={kind === "email" ? "you@example.com" : "98765 43210"}
+              type="email"
+              inputMode="email"
+              autoComplete="email"
+              placeholder="you@example.com"
               value={value}
               onChange={(e) => setValue(e.target.value)}
               autoFocus
@@ -113,10 +104,10 @@ function AddWithCode({ kind, onDone, onCancel }: { kind: Kind; onDone: () => voi
           </>
         ) : (
           <>
-            <label className="label" htmlFor={id}>Code sent to {kind === "phone" ? pretty(value) : value}</label>
+            <label className="label" htmlFor={id}>Code sent to {value}</label>
             <input
               id={id}
-              className="input phone-code"
+              className="input code-input"
               inputMode="numeric"
               autoComplete="one-time-code"
               maxLength={6}
@@ -130,7 +121,7 @@ function AddWithCode({ kind, onDone, onCancel }: { kind: Kind; onDone: () => voi
           </>
         )}
         <FieldError id={id} message={error} />
-        <div className="phone-actions">
+        <div className="code-actions">
           <button type="button" className="btn btn-ghost btn-sm" onClick={sent ? () => { setSent(false); setCode(""); setError(""); } : onCancel}>
             {sent ? "Back" : "Cancel"}
           </button>

@@ -16,7 +16,6 @@ interface Settings {
   remindersEnabled: boolean;
   reminderDaysBefore: number;
   email: string | null;
-  phone?: string | null;
   planInfo?: PlanInfo;
   logins?: Logins;
 }
@@ -118,7 +117,7 @@ export default function SettingsPage() {
                 ))}
               </div>
               <span className="hint">
-                {settings.email ? <>Emails go to {settings.email}.</> : <>Your account has no email address, so email reminders can't be sent. Use phone notifications below.</>} Late refunds and payments are repeated once a week, not every day.
+                {settings.email ? <>Emails go to {settings.email}.</> : <>Your account has no email address, so email reminders can't be sent. Add one under Account below, or use phone notifications.</>} Late refunds and payments are repeated once a week, not every day.
               </span>
             </div>
 
@@ -164,11 +163,11 @@ export default function SettingsPage() {
               <div>
                 <h2>Account</h2>
                 <p className="muted">
-                  Signed in as {session?.user?.name ? <><b>{session.user.name}</b> · </> : null}{session?.user?.email ?? settings.email ?? settings.phone?.replace(/^\+91(\d{5})(\d{5})$/, "+91 $1 $2") ?? "Instagram"}
+                  Signed in as {session?.user?.name ? <><b>{session.user.name}</b> · </> : null}{session?.user?.email ?? settings.email ?? (settings.logins?.providers.includes("instagram") ? "Instagram" : "your account")}
                 </p>
               </div>
             </div>
-            <SignInMethods email={settings.email} phone={settings.phone ?? null} logins={settings.logins} onChange={load} />
+            <SignInMethods email={settings.email} logins={settings.logins} onChange={load} />
             <div>
               <button type="button" className="btn btn-secondary btn-sm" onClick={() => signOut({ callbackUrl: "/" })}>
                 <Icon name="logout" size={14} /> Sign out
