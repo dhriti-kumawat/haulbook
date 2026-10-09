@@ -8,7 +8,7 @@ import { NextRequest, NextResponse } from "next/server";
 export function middleware(req: NextRequest) {
   if (req.method === "GET" || req.method === "HEAD" || req.method === "OPTIONS") return NextResponse.next();
   const { pathname } = req.nextUrl;
-  if (pathname.startsWith("/api/auth/") && !/^\/api\/auth\/(signup|forgot|reset|phone)$/.test(pathname)) return NextResponse.next();
+  if (pathname.startsWith("/api/auth/") && !/^\/api\/auth\/(signup|forgot|reset)$/.test(pathname)) return NextResponse.next();
   if (pathname.startsWith("/api/cron/")) return NextResponse.next();
 
   const origin = req.headers.get("origin");

@@ -6,7 +6,7 @@ import { prisma } from "./prisma";
 /** Returns the signed-in user, or a ready-made error response. */
 export async function requireUser() {
   const session = await getServerSession(authOptions);
-  // Instagram and phone accounts may have no email, so the account id is what identifies them.
+  // Instagram accounts have no email, so the account id is what identifies them.
   if (!session?.user?.id && !session?.user?.email) {
     return { error: NextResponse.json({ error: "Unauthorized" }, { status: 401 }) };
   }

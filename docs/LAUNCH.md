@@ -65,17 +65,6 @@ Business and Creator accounts; personal accounts see an error and can use anothe
 Instagram does not share an email address. These accounts get push notifications, and can add a confirmed
 email in Settings → Account → Ways to sign in to get email reminders too.
 
-## 7. Phone code sign-in (optional)
-
-Users enter an Indian mobile number and get a 6-digit code by SMS. A new number creates an account.
-
-1. Create a Twilio account, then Verify → Services → Create a service named Haulbook (SMS channel).
-2. Set `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN` and `TWILIO_VERIFY_SID` (the service's `VA…` ID).
-3. Each number can request 4 codes an hour, and each address 10, to limit SMS costs.
-
-In development without these keys, the code is printed in the server log
-(`[phone-auth] Development code for …`) instead of being sent.
-
 ## Known limits to revisit as you grow
 
 - **Uploaded photos** are stored inside the database as small JPEGs (about 800px, under 300 KB each). At scale, move them to file storage such as Vercel Blob or S3.
