@@ -22,7 +22,7 @@ For every product, Haulbook shows the one next step: film it, post it, return it
 - **Share to Haulbook**: on Android, once installed, Haulbook appears in the share sheet of shop apps.
 - **Earnings** (Pro): collab fees earned and due, refunds recovered and pending, value of PR products received, and per-brand totals for each Indian financial year (April to March), with a CSV for tax time.
 - **Invoices and payment follow-ups** (Pro): a numbered, printable invoice for each paid collab using your billing details, and a ready payment reminder to copy, email or send on WhatsApp.
-- **Free and Pro**: Free covers up to 25 products in progress with email reminders, list and board views. Pro adds unlimited products, phone and WhatsApp reminders, calendar, brand reports, CSV export, earnings and invoices. Pro is free for everyone during early access.
+- **Free and Pro**: Free covers up to 25 products in progress with email reminders, list and board views. Pro adds unlimited products, phone and WhatsApp reminders, calendar, brand reports, CSV export, earnings and invoices. Pro costs ₹199 a month, ₹99 during early access; until payments open, every account has Pro features unlocked.
 - **Shops & brands**: set each shop's return window in one tap, and print a report per brand with post links and fees.
 - **Reminders**: a short daily digest, sent only on days something is due or newly late, by email and/or as a phone or browser notification.
 - **Accounts**: one-tap Google sign-in, or email and password with a forgot-password flow.

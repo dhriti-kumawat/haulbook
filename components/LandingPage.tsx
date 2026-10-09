@@ -218,14 +218,14 @@ export function LandingPage() {
           <SectionHead label="Plans" title="Start free." soft="Grow into Pro." />
           <div className="plans">
             <div className="plan">
-              <h3>Free</h3>
+              <h3>Free <span className="plan-price">₹0</span></h3>
               <p>For getting every review on track.</p>
               <ul>{["Up to 25 products in progress", "Add by link or by voice", "Email reminders", "List and board views"].map((t) => <li key={t}><Icon name="check" size={14} />{t}</li>)}</ul>
               <div className="plan-actions"><Link href="/auth/signup" className="btn btn-secondary">Start free</Link></div>
             </div>
             <div className="plan is-pro grad">
-              <span className="l-sticker plan-sticker"><span className="l-sticker-icon"><Icon name="check" size={13} /></span>Free in early access</span>
-              <h3>Pro</h3>
+              <span className="l-sticker plan-sticker"><span className="l-sticker-icon"><Icon name="check" size={13} /></span>₹99/mo early access</span>
+              <h3>Pro <span className="plan-price"><s>₹199</s> ₹99<em>/month</em></span></h3>
               <p>For creators running paid collabs.</p>
               <ul>{["Unlimited products", "Phone and WhatsApp reminders", "Calendar, brand reports, CSV export", "Earnings by financial year", "Invoices and payment reminders"].map((t) => <li key={t}><Icon name="check" size={14} />{t}</li>)}</ul>
               <div className="plan-actions"><Link href="/pricing" className="btn btn-primary">See Pro plan details</Link></div>

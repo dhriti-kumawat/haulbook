@@ -1605,3 +1605,7 @@ h1 .pro-chip { height: 24px; font-size: 12px; transform: translateY(-4px); }
 .plan-actions { display: flex; flex-direction: column; gap: 8px; margin-top: auto; padding-top: 18px; }
 .plan-actions .btn { height: 44px; }
 .plans-more { display: flex; justify-content: center; margin-top: 16px; }
+.price-amount s { color: var(--faint); font-size: 22px; font-weight: 700; margin-right: 2px; }
+.plan-price { margin-left: 8px; font-size: 18px; font-weight: 800; color: var(--accent-ink); }
+.plan-price s { color: var(--faint); font-size: 14px; font-weight: 700; margin-right: 2px; }
+.plan-price em { font-style: normal; font-size: 13px; font-weight: 600; color: var(--muted); }

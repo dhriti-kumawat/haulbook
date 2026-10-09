@@ -5,7 +5,7 @@ export const FAQ_GROUPS: { title: string; items: Faq[] }[] = [
   {
     title: "Getting started",
     items: [
-      { q: "Is Haulbook free?", a: "Yes. Free covers up to 25 products in progress. Pro adds unlimited products, phone and WhatsApp reminders, earnings and invoices, and it's free for everyone during early access." },
+      { q: "Is Haulbook free?", a: "Yes, Free is free forever and covers up to 25 products in progress. Pro adds unlimited products, phone and WhatsApp reminders, earnings and invoices for ₹99 a month during early access (usually ₹199)." },
       { q: "Do I need to install anything?", a: "No. Haulbook runs in your browser. On your phone, add it to your home screen and it opens like an app." },
       { q: "Can I use it on my phone and laptop?", a: "Yes. Sign in on both and you see the same products everywhere." },
       { q: "Which shops does adding by link work with?", a: "Most online shops in India and abroad. If a shop blocks it, Haulbook keeps the name from the link and you add the price and a photo or screenshot." },
@@ -32,7 +32,7 @@ export const FAQ_GROUPS: { title: string; items: Faq[] }[] = [
   {
     title: "Plans",
     items: [
-      { q: "How much does Pro cost?", a: "Nothing during early access: every account gets Pro. We'll share Pro pricing well before it starts, and you can stay on Free." },
+      { q: "How much does Pro cost?", a: "₹199 a month. During early access it's ₹99 a month, and you keep that price. Payments open soon; until then every Pro feature is unlocked." },
       { q: "What happens to my products if I go back to Free?", a: "Nothing is deleted. You keep everything; Free just limits how many products can be in progress and turns off Pro-only features." },
     ],
   },

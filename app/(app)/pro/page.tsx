@@ -17,7 +17,7 @@ export default function ProPage() {
       </div>
 
       {info?.earlyAccess && (
-        <p className="pro-banner"><Icon name="sparkle" size={16} /> Everyone gets Pro free during early access. Nothing to do.</p>
+        <p className="pro-banner"><Icon name="sparkle" size={16} /> Pro is ₹99 a month during early access (usually ₹199). Payments open soon; until then every Pro feature is unlocked for you.</p>
       )}
 
       <div className="plan-grid">
@@ -26,10 +26,10 @@ export default function ProPage() {
           <p className="muted">Track your reviews and never miss a return window.</p>
         </section>
         <section className="plan-col is-pro">
-          <h2>Pro</h2>
-          <p className="muted">Unlimited products, every reminder, income and invoices.</p>
+          <h2>Pro <span className="plan-price"><s>₹199</s> ₹99<em>/month</em></span></h2>
+          <p className="muted">Unlimited products, every reminder, earnings and invoices.</p>
           <button type="button" className="btn btn-primary" disabled>
-            {info?.plan === "pro" || info?.earlyAccess ? "You have Pro" : "Upgrade: coming soon"}
+            {info?.plan === "pro" ? "You have Pro" : info?.earlyAccess ? "Unlocked until payments open" : "Upgrade: ₹99/month, coming soon"}
           </button>
         </section>
       </div>

@@ -7,6 +7,10 @@
  */
 export const FREE_ACTIVE_LIMIT = 25;
 
+/** Pro price in rupees per month: the usual price, and the early-access price. */
+export const PRO_PRICE = 199;
+export const PRO_EARLY_PRICE = 99;
+
 export type ProFeature = "calendar" | "reports" | "export" | "push" | "whatsapp" | "income" | "invoices";
 
 export const PRO_FEATURES: { key: ProFeature | "unlimited"; label: string }[] = [

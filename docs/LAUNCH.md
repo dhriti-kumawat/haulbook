@@ -107,7 +107,7 @@ What the creator says is sent to Anthropic for this; mention it in the privacy p
 | List and board views | + calendar, brand reports, CSV export |
 | | Earnings by financial year, invoices and payment follow-ups |
 
-During early access `PLAN_LIMITS` is unset, so every account gets Pro and nothing is limited; Settings and
+Pricing shown on the site: Pro ₹199/month, ₹99/month for early access (constants `PRO_PRICE` and `PRO_EARLY_PRICE` in `lib/plan.ts`). Until payments are added, `PLAN_LIMITS` is unset, so every account has Pro features unlocked and nothing is limited; Settings and
 the Free/Pro page say so. To start enforcing, set `PLAN_LIMITS=on` in Vercel. Accounts with
 `plan = 'pro'` in the `User` table keep everything; until payments exist, set that by hand in Supabase.
 Limits are checked on the server (adding a product past 25, CSV export, notifications, invoices) and the
