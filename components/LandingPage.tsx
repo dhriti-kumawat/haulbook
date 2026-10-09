@@ -236,18 +236,23 @@ export function LandingPage() {
             <span className="l-pill"><i />Questions</span>
             <h2 className="l-h2">Good <span className="l-soft">to know.</span></h2>
           </div>
-          <div className="faq">
-            {MAIN_FAQ.map((f, i) => (
-              <details key={f.q} className="faq-item" open={i === 0}>
-                <summary>
-                  {f.q}
-                  <Icon name="plus" size={16} />
-                </summary>
-                <p>{f.a}</p>
-              </details>
+          {/* Two independent columns: opening an answer only pushes down the questions under it. */}
+          <div className="faq faq-cols">
+            {[MAIN_FAQ.slice(0, 3), MAIN_FAQ.slice(3)].map((col, c) => (
+              <div key={c} className="faq-col">
+                {col.map((f, i) => (
+                  <details key={f.q} className="faq-item" open={c === 0 && i === 0}>
+                    <summary>
+                      {f.q}
+                      <Icon name="plus" size={16} />
+                    </summary>
+                    <p>{f.a}</p>
+                  </details>
+                ))}
+              </div>
             ))}
-            <div className="faq-more"><Link href="/help" className="btn btn-secondary btn-sm">See all questions <Icon name="chevronRight" size={14} /></Link></div>
           </div>
+          <div className="faq-more"><Link href="/help" className="btn btn-secondary btn-sm">See all questions <Icon name="chevronRight" size={14} /></Link></div>
         </section>
 
       </main>
