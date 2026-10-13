@@ -44,7 +44,7 @@ export function VoiceAdd({ onFill }: { onFill: (fields: VoiceProduct) => void })
   const [text, setText] = useState("");
   const [message, setMessage] = useState<{ tone: "ok" | "error"; text: string } | null>(null);
   const rec = useRef<Recognition | null>(null);
-  const finalText = useRef("");
+  const heard = useRef("");
   const canListen = useRef(false);
 
   useEffect(() => {
@@ -96,35 +96,56 @@ export function VoiceAdd({ onFill }: { onFill: (fields: VoiceProduct) => void })
     r.lang = "en-IN";
     r.interimResults = true;
     r.continuous = true;
-    finalText.current = "";
+    heard.current = "";
     setText("");
     setMessage(null);
     r.onresult = (e) => {
-      let interim = "";
-      for (let i = e.resultIndex; i < e.results.length; i++) {
-        const piece = e.results[i][0].transcript;
-        if (e.results[i].isFinal) finalText.current += `${piece} `;
-        else interim += piece;
+      // Rebuild from every result each time. Chrome on Android repeats earlier words inside later
+      // results, so a result that already contains the text so far replaces it instead of adding.
+      let said = "";
+      for (let i = 0; i < e.results.length; i++) {
+        const piece = e.results[i][0].transcript.trim();
+        if (!piece) continue;
+        said = piece.toLowerCase().startsWith(said.toLowerCase()) ? piece : `${said} ${piece}`;
       }
-      setText((finalText.current + interim).trim());
+      heard.current = said.trim();
+      setText(heard.current);
     };
     r.onerror = (e) => {
-      setMode("idle");
+      // onend follows every error; this stops it from filling in (and replacing this message).
+      rec.current = null;
+      if (e.error === "aborted") return;
+      if (e.error === "no-speech") {
+        setMode("idle");
+        setMessage({ tone: "error", text: "Didn't hear anything. Tap the mic and try again." });
+        return;
+      }
+      // Blocked mic, no network for the speech service, or a browser that can't listen here (Brave,
+      // some installed apps): switch to typing and keep whatever was heard.
+      setText(heard.current);
+      setMode("typing");
       setMessage({
         tone: "error",
-        text: e.error === "not-allowed" || e.error === "service-not-allowed"
-          ? "Microphone access is blocked. Allow it for this site, or type it instead."
-          : e.error === "no-speech" ? "Didn't hear anything. Tap the mic and try again." : "Listening stopped. Try again or type it instead.",
+        text:
+          e.error === "not-allowed" || e.error === "service-not-allowed"
+            ? "Microphone access is blocked for this site. Allow it in your browser settings, or type it here."
+            : e.error === "audio-capture"
+              ? "No microphone found. Type it here instead."
+              : "Voice isn't available in this browser right now. Type it here instead.",
       });
     };
     r.onend = () => {
-      if (rec.current === r) {
-        rec.current = null;
-        fill(finalText.current);
-      }
+      if (rec.current !== r) return;
+      rec.current = null;
+      fill(heard.current);
     };
-    r.start();
-    setMode("listening");
+    try {
+      r.start();
+      setMode("listening");
+    } catch {
+      rec.current = null;
+      setMode("typing");
+    }
   }
 
   function stop() {
