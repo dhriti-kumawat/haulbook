@@ -103,10 +103,10 @@ export default function EarningsPage() {
                   {s.brands.map((b) => (
                     <tr key={b.brand}>
                       <td><b>{b.brand}</b><div className="muted">{b.products} product{b.products === 1 ? "" : "s"}</div></td>
-                      <td className="num">{b.feesEarned ? formatMoney(b.feesEarned) : "–"}</td>
-                      <td className="num">{b.feesDue ? formatMoney(b.feesDue) : "–"}</td>
-                      <td className="num">{b.refundsRecovered ? formatMoney(b.refundsRecovered) : "–"}{b.refundsPending ? <div className="muted">{formatMoney(b.refundsPending)} pending</div> : null}</td>
-                      <td className="num">{b.prValue ? formatMoney(b.prValue) : "–"}</td>
+                      <td className={b.feesEarned ? "num" : "num is-empty"} data-label="Earned">{b.feesEarned ? formatMoney(b.feesEarned) : "–"}</td>
+                      <td className={b.feesDue ? "num" : "num is-empty"} data-label="Still due">{b.feesDue ? formatMoney(b.feesDue) : "–"}</td>
+                      <td className={b.refundsRecovered || b.refundsPending ? "num" : "num is-empty"} data-label="Refunds">{b.refundsRecovered ? formatMoney(b.refundsRecovered) : "–"}{b.refundsPending ? <div className="muted">{formatMoney(b.refundsPending)} pending</div> : null}</td>
+                      <td className={b.prValue ? "num" : "num is-empty"} data-label="PR value">{b.prValue ? formatMoney(b.prValue) : "–"}</td>
                     </tr>
                   ))}
                 </tbody>

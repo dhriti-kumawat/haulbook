@@ -39,13 +39,15 @@ export function urgencyScore(p: ProductView) {
 export function summarize(products: ProductView[]) {
   const sum = (list: ProductView[], pick: (p: ProductView) => number | null) => list.reduce((s, p) => s + (pick(p) ?? 0), 0);
   const refundPending = products.filter((p) => p.stage === "refund");
-  const paymentPending = products.filter((p) => p.stage === "payment");
   const returnable = products.filter((p) => p.type === "bought" && p.moneyOut > 0 && p.stage !== "refund");
+  const collabsUnpaid = products.filter((p) => p.type === "collab" && p.moneyOut > 0);
+  // The three parts always add up to moneyOut: bought products still returnable, refunds on their
+  // way, and collab fees not paid yet (whether or not the post is up).
   return {
     moneyOut: sum(products, (p) => p.moneyOut),
-    refundsPending: sum(refundPending, (p) => p.price),
-    paymentsDue: sum(paymentPending, (p) => p.fee),
-    atStake: sum(returnable, (p) => p.price),
+    refundsPending: sum(refundPending, (p) => p.moneyOut),
+    collabFees: sum(collabsUnpaid, (p) => p.moneyOut),
+    atStake: sum(returnable, (p) => p.moneyOut),
     counts: {
       film: products.filter((p) => bucketOf(p) === "film").length,
       post: products.filter((p) => bucketOf(p) === "post").length,
