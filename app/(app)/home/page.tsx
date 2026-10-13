@@ -109,8 +109,8 @@ export default function Home() {
                   <span>refunds pending</span>
                 </div>
                 <div>
-                  <b className="num">{formatMoney(s.paymentsDue)}</b>
-                  <span>collab payments due</span>
+                  <b className="num">{formatMoney(s.collabFees)}</b>
+                  <span>collab fees to come</span>
                 </div>
               </div>
             </section>

@@ -265,7 +265,8 @@ function titleFromPath(url: URL): string | null {
     .split(/[-_\s]+/)
     .filter((w) => w && !/^\d{4,}$/.test(w) && !/^[a-z]{0,2}\d{5,}$/i.test(w));
   if (words.filter((w) => /[a-z]{2,}/i.test(w)).length < 2) return null;
-  const t = words.join(" ");
+  // "men-s-running-shoes" → "Men's running shoes"; "100-1" stays "100 1" (sizes and versions).
+  const t = words.join(" ").replace(/\b(\w+) s\b/g, (m, w) => (/^(men|women|kid|girl|boy|baby|children|unisex)$/i.test(w) ? `${w}'s` : m));
   return t.charAt(0).toUpperCase() + t.slice(1);
 }
 

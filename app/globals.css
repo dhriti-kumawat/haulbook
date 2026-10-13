@@ -1422,6 +1422,19 @@ h1 .pro-chip { height: 24px; font-size: 12px; transform: translateY(-4px); }
 .income-bar-fill { width: 100%; max-width: 28px; min-height: 3px; border-radius: 8px 8px 3px 3px; background: var(--accent); }
 .income-month em { font-style: normal; font-size: 11px; color: var(--muted); }
 .income-table-wrap { overflow-x: auto; margin: 0 -4px; }
+/* Phones: each brand becomes a short list instead of a table that runs off the screen. Empty amounts are left out. */
+@media (max-width: 600px) {
+  .income-table-wrap .income-table { display: block; border: 0; background: none; font-size: 14px; }
+  .income-table-wrap .income-table tbody, .income-table-wrap .income-table tr { display: block; }
+  .income-table-wrap .income-table thead { display: none; }
+  .income-table-wrap .income-table tr { padding: 12px 0; border-top: 1px solid var(--line); }
+  .income-table-wrap .income-table tr:first-child { border-top: 0; padding-top: 0; }
+  .income-table-wrap .income-table td { display: flex; justify-content: space-between; gap: 12px; padding: 3px 0; border: 0; text-align: right; }
+  .income-table-wrap .income-table td:first-child { align-items: baseline; text-align: left; padding-bottom: 6px; }
+  .income-table-wrap .income-table td.num::before { content: attr(data-label); color: var(--muted); }
+  .income-table-wrap .income-table td.is-empty { display: none; }
+  .income-table-wrap .income-table td .muted { display: inline; margin-left: 6px; }
+}
 .income-table td.num, .income-table th:not(:first-child) { text-align: right; }
 .panel-card + .panel-card { margin-top: 12px; }
 @media (max-width: 900px) {
@@ -1462,6 +1475,8 @@ h1 .pro-chip { height: 24px; font-size: 12px; transform: translateY(-4px); }
 .invoice-to b { font-size: 18px; }
 .invoice .report-table td.num, .invoice .report-table th:last-child { text-align: right; }
 .invoice .report-table tfoot td { border-top: 2px solid var(--line-strong); }
+/* The invoice has only two columns, so it stays a full-width table on phones too. */
+.invoice .report-table { display: table; }
 .invoice-pay { display: flex; flex-direction: column; gap: 4px; margin-top: 18px; padding: 16px; border-radius: 16px; background: var(--surface); border: 1px solid var(--line); font-size: 14px; }
 @media (max-width: 640px) { .invoice-from { text-align: left; } }
 .collab-actions { display: flex; flex-wrap: wrap; gap: 8px; }

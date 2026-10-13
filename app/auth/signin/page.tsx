@@ -8,11 +8,13 @@ import { Icon } from "@/components/Icon";
 import { GoogleAuth, authErrorMessage } from "@/components/GoogleAuth";
 import { PasswordInput } from "@/components/PasswordInput";
 import { PendingLinkNote } from "@/components/PendingLinkNote";
+import { FieldError } from "@/components/FieldError";
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [fieldErrors, setFieldErrors] = useState<{ email?: string; password?: string }>({});
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
@@ -25,8 +27,17 @@ export default function SignIn() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setLoading(true);
     setError("");
+    const errors: typeof fieldErrors = {};
+    if (!email.trim()) errors.email = "Enter your email";
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) errors.email = "Enter an email like you@example.com";
+    if (!password) errors.password = "Enter your password";
+    setFieldErrors(errors);
+    if (Object.keys(errors).length) {
+      document.getElementById(Object.keys(errors)[0])?.focus();
+      return;
+    }
+    setLoading(true);
 
     try {
       const result = await signIn("credentials", {
@@ -58,7 +69,7 @@ export default function SignIn() {
 
       <GoogleAuth label="Continue with Google" />
 
-      <form onSubmit={handleSubmit} className="auth-form">
+      <form onSubmit={handleSubmit} className="auth-form" noValidate>
         {error && (
           <div className="alert" role="alert">
             <Icon name="alert" size={16} /> {error}
@@ -74,8 +85,10 @@ export default function SignIn() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             autoComplete="email"
-            required
+            aria-invalid={Boolean(fieldErrors.email)}
+            aria-describedby={fieldErrors.email ? "email-error" : undefined}
           />
+          <FieldError id="email" message={fieldErrors.email} />
         </div>
 
         <div className="field">
@@ -84,6 +97,7 @@ export default function SignIn() {
             <Link href="/auth/forgot" className="label-link">Forgot password?</Link>
           </div>
           <PasswordInput id="password" value={password} onChange={setPassword} autoComplete="current-password" />
+          <FieldError id="password" message={fieldErrors.password} />
         </div>
 
         <button type="submit" className="btn btn-primary btn-block" disabled={loading}>

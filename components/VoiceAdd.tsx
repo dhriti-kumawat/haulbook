@@ -16,6 +16,7 @@ type Recognition = {
   onresult: ((e: { resultIndex: number; results: ArrayLike<ArrayLike<{ transcript: string }> & { isFinal: boolean }> }) => void) | null;
   onerror: ((e: { error: string }) => void) | null;
   onend: (() => void) | null;
+  onaudiostart: (() => void) | null;
 };
 
 function speechRecognition(): (new () => Recognition) | null {
@@ -40,7 +41,7 @@ const LABELS: Partial<Record<keyof VoiceProduct, string>> = {
  * browser can't listen), and the details fill the form for them to check.
  */
 export function VoiceAdd({ onFill }: { onFill: (fields: VoiceProduct) => void }) {
-  const [mode, setMode] = useState<"idle" | "listening" | "typing" | "working">("idle");
+  const [mode, setMode] = useState<"idle" | "starting" | "listening" | "typing" | "working">("idle");
   const [text, setText] = useState("");
   const [message, setMessage] = useState<{ tone: "ok" | "error"; text: string } | null>(null);
   const rec = useRef<Recognition | null>(null);
@@ -85,10 +86,18 @@ export function VoiceAdd({ onFill }: { onFill: (fields: VoiceProduct) => void })
     }
   }
 
-  function listen() {
+  async function listen() {
     const Speech = speechRecognition();
     if (!Speech) {
       setMode("typing");
+      return;
+    }
+    // Ask for the microphone first. The browser shows its permission box near the address bar, so
+    // say so on the page instead of looking like it's already recording.
+    const permission = await navigator.permissions?.query({ name: "microphone" as PermissionName }).catch(() => null);
+    if (permission?.state === "denied") {
+      setMode("typing");
+      setMessage({ tone: "error", text: "Microphone access is blocked for this site. Click the icon next to the address bar to allow it, or type it here." });
       return;
     }
     const r = new Speech();
@@ -110,6 +119,7 @@ export function VoiceAdd({ onFill }: { onFill: (fields: VoiceProduct) => void })
       }
       heard.current = said.trim();
       setText(heard.current);
+      setMode((m) => (m === "starting" ? "listening" : m));
     };
     r.onerror = (e) => {
       // onend follows every error; this stops it from filling in (and replacing this message).
@@ -134,6 +144,8 @@ export function VoiceAdd({ onFill }: { onFill: (fields: VoiceProduct) => void })
               : "Voice isn't available in this browser right now. Type it here instead.",
       });
     };
+    // Only now is it really recording.
+    r.onaudiostart = () => setMode((m) => (m === "starting" ? "listening" : m));
     r.onend = () => {
       if (rec.current !== r) return;
       rec.current = null;
@@ -141,7 +153,7 @@ export function VoiceAdd({ onFill }: { onFill: (fields: VoiceProduct) => void })
     };
     try {
       r.start();
-      setMode("listening");
+      setMode("starting");
     } catch {
       rec.current = null;
       setMode("typing");
@@ -154,7 +166,15 @@ export function VoiceAdd({ onFill }: { onFill: (fields: VoiceProduct) => void })
 
   return (
     <div className={`voice-add ${mode}`}>
-      {mode === "listening" ? (
+      {mode === "starting" ? (
+        <div className="voice-live is-waiting" aria-live="polite">
+          <span className="save-spinner" aria-hidden="true" />
+          <span className="voice-text">
+            Waiting for the microphone… If your browser asks, choose <b>Allow</b>.
+          </span>
+          <button type="button" className="btn btn-ghost btn-sm" onClick={() => { rec.current?.abort(); rec.current = null; setMode("idle"); }}>Cancel</button>
+        </div>
+      ) : mode === "listening" ? (
         <div className="voice-live" aria-live="polite">
           <span className="voice-pulse" aria-hidden="true" />
           <span className="voice-text">{text || "Listening… say the product, shop, price and any dates."}</span>

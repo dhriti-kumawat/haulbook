@@ -3,13 +3,18 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Icon } from "@/components/Icon";
+import { FieldError } from "@/components/FieldError";
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
-  const [state, setState] = useState<{ busy?: boolean; done?: string; error?: string }>({});
+  const [state, setState] = useState<{ busy?: boolean; done?: string; error?: string; field?: string }>({});
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+      setState({ field: email.trim() ? "Enter an email like you@example.com" : "Enter your email" });
+      return;
+    }
     setState({ busy: true });
     const res = await fetch("/api/auth/forgot", {
       method: "POST",
@@ -32,11 +37,12 @@ export default function ForgotPassword() {
           <Icon name="send" size={16} /> {state.done} Check your inbox and spam folder.
         </div>
       ) : (
-        <form className="auth-form" onSubmit={submit}>
+        <form className="auth-form" onSubmit={submit} noValidate>
           {state.error && <div className="alert" role="alert"><Icon name="alert" size={16} /> {state.error}</div>}
           <div className="field">
             <label htmlFor="email" className="label">Email</label>
-            <input id="email" className="input" type="email" autoComplete="email" required value={email} onChange={(e) => setEmail(e.target.value)} autoFocus />
+            <input id="email" className="input" type="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} autoFocus aria-invalid={Boolean(state.field)} aria-describedby={state.field ? "email-error" : undefined} />
+            <FieldError id="email" message={state.field} />
           </div>
           <button type="submit" className="btn btn-primary btn-block" disabled={state.busy}>
             {state.busy ? "Sending…" : "Send reset link"}

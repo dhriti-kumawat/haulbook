@@ -44,7 +44,7 @@ function Invoice({ id }: { id: string }) {
       </div>
       {missing && (
         <p className="pro-banner no-print">
-          <Icon name="alert" size={16} /> Add your name and how to pay you in <Link href="/settings">Settings → Invoice details</Link>.
+          <Icon name="alert" size={16} /> <span>Add your name and how to pay you in <Link href="/settings">Settings → Invoice details</Link>.</span>
         </p>
       )}
 
