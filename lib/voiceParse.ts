@@ -142,7 +142,9 @@ export function parseSimple(transcript: string, today = new Date().toISOString()
   const known = SHOPS.find((s) => new RegExp(`\\b${s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`, "i").test(t));
   const sender = lower.match(/^(?:so\s+)?([a-z][\w&.']*(?:\s+[a-z][\w&.']*)?)\s+(?:sent|gifted|gave)\b/);
   const fromWords = lower.match(/\b(?:from|on|with|by)\s+([a-z][\w&.']*(?:\s+(?!for\b|at\b|and\b|return|which|it\b|need|post|in\b|on\b|by\b|rs\b|rupees)[a-z][\w&.']*)?)/);
-  const brandWord = (w?: string) => (w && !/^(the|a|an|my|me|monday|tuesday|wednesday|thursday|friday|saturday|sunday|today|tomorrow|amazon\.in)$/.test(w) ? titleCase(w) : null);
+  // Words after "from"/"on" that are not a shop or brand.
+  const NOT_A_SHOP = /^(the|a|an|my|me|it|this|that|there|here|them|home|store|shop|online|website|site|app|somewhere|someone|internet|monday|tuesday|wednesday|thursday|friday|saturday|sunday|today|tomorrow|yesterday|amazon\.in)\b/;
+  const brandWord = (w?: string) => (w && !NOT_A_SHOP.test(w) ? titleCase(w) : null);
   // "mamaearth collab …": a one- or two-word brand right before "collab" or "pr".
   const before = lower.match(/^(?:a\s+|an\s+)?([a-z][\w&.']*(?:\s+[a-z][\w&.']*)?)\s+(?:collab|pr)\b/);
   const shop = known ?? (sender ? brandWord(sender[1]) : null) ?? (fromWords && !/^\d/.test(fromWords[1]) ? brandWord(fromWords[1]) : null) ?? (before ? brandWord(before[1]) : null);
@@ -170,7 +172,7 @@ export function parseSimple(transcript: string, today = new Date().toISOString()
   // For PR and collabs, a bare "by friday" / "before the 20th" is the post date too.
   const byPhrase = type === "pr" || type === "collab" ? lower.match(/\b(?:by|before|till|until)\b(.{0,25})/) : null;
   const postBy = (postPhrase ? spokenDate(postPhrase[1], today) : null) ?? (byPhrase ? spokenDate(byPhrase[1], today) : null);
-  const arrived = /\b(?:arrived|delivered|received|came|got it)\b/.test(lower);
+  const arrived = /\b(?:arrived|delivered|received|came)\b/.test(lower);
   const arrivedPhrase = lower.match(/\b(?:arrived|delivered|received|came)\b(.{0,30})/);
   const deliveredOn = arrivedPhrase ? spokenDate(arrivedPhrase[1], today) : null;
 
@@ -182,10 +184,14 @@ export function parseSimple(transcript: string, today = new Date().toISOString()
   let name = sender
     ? `${sender[1]} ${lower.match(/\b(pr kit|pr package|pr box|hamper|kit|box|package)\b/)?.[1] ?? "PR"}`
     : t
-        .replace(/^(?:so\s+|okay\s+|ok\s+)?(?:i\s+)?(?:just\s+|have\s+|had\s+)?(?:got|bought|ordered|purchased|received|picked up|added)\s+(?:the\s+|a\s+|an\s+|this\s+|my\s+)?/i, "")
-        .split(/\s*[,.;]\s*|\s+(?:from|on|for|at|return|returnable|which|need|needs|have to|fee|it|arrived|delivered|worth|price|cost|costs|post|due|by|with|rs|rupees)\s+|\s+(?:\d|₹)/i)[0];
+        // Fillers and lead-ins: "so um I want to add the…", "add a…", "I just got the…".
+        .replace(/^(?:(?:so|okay|ok|um|uh|hey|hi|hello|yeah|yes|right|and|also|then)\s+)*/i, "")
+        .replace(/^(?:(?:i|we)\s+)?(?:(?:want to|wanna|would like to|need to|have to|am going to|gonna|just|have|had|also)\b)?\s*(?:(?:add|added|adding|track|save|create|log|put in)\b)?\s*(?:a\s+)?(?:new\s+)?(?:(?:product|item)\b)?\s*(?:(?:called|named)\b)?\s*/i, "")
+        .replace(/^(?:(?:i|we)\s+)?(?:just\s+|have\s+|had\s+)?(?:got|bought|ordered|purchased|received|picked up|added)\s+(?:the\s+|a\s+|an\s+|this\s+|my\s+)?/i, "")
+        .split(/\s*[,.;]\s*|\s+(?:i|we|i've|i'm)\s+|\s+(?:from|on|for|at|return|returnable|which|need|needs|have to|fee|it|arrived|delivered|worth|price|cost|costs|post|due|by|with|rs|rupees)\s+|\s+(?:\d|₹)/i)[0];
   name = name.replace(/\s+(?:collab|pr)$/i, "").trim();
   if (shop && name.toLowerCase() === shop.toLowerCase()) name = type === "collab" ? `${name} collab` : type === "pr" ? `${name} PR` : "";
+  if (/^(?:i|we|me|my|it|this|that|there|here)\b/i.test(name)) name = "";
   const title = name.length >= 3 ? titleCase(name) : null;
 
   return {

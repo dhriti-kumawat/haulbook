@@ -16,6 +16,8 @@ export async function POST(req: NextRequest) {
   if (transcript.length > 1500) return NextResponse.json({ error: "That's too long. Describe one product at a time." }, { status: 400 });
   const today = typeof body?.today === "string" && /^\d{4}-\d{2}-\d{2}$/.test(body.today) ? body.today : new Date().toISOString().slice(0, 10);
 
+  // Local development only: see exactly what the browser heard, to tune the reader.
+  if (process.env.NODE_ENV !== "production") console.log(`[voice] heard: "${transcript}"`);
   if (!aiConfigured()) return NextResponse.json({ fields: parseSimple(transcript, today), ai: false });
   try {
     return NextResponse.json({ fields: await parseWithClaude(transcript, today), ai: true });

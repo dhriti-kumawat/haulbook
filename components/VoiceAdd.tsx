@@ -43,6 +43,7 @@ const LABELS: Partial<Record<keyof VoiceProduct, string>> = {
 export function VoiceAdd({ onFill }: { onFill: (fields: VoiceProduct) => void }) {
   const [mode, setMode] = useState<"idle" | "starting" | "listening" | "typing" | "working">("idle");
   const [text, setText] = useState("");
+  const [fromVoice, setFromVoice] = useState(false);
   const [message, setMessage] = useState<{ tone: "ok" | "error"; text: string } | null>(null);
   const rec = useRef<Recognition | null>(null);
   const heard = useRef("");
@@ -79,6 +80,7 @@ export function VoiceAdd({ onFill }: { onFill: (fields: VoiceProduct) => void })
           : { tone: "error", text: "Couldn't pick out any details. Try saying the name, shop and price." }
       );
       setText("");
+      setFromVoice(false);
       setMode("idle");
     } catch (e) {
       setMode("idle");
@@ -106,6 +108,7 @@ export function VoiceAdd({ onFill }: { onFill: (fields: VoiceProduct) => void })
     r.interimResults = true;
     r.continuous = true;
     heard.current = "";
+    setFromVoice(false);
     setText("");
     setMessage(null);
     r.onresult = (e) => {
@@ -149,7 +152,16 @@ export function VoiceAdd({ onFill }: { onFill: (fields: VoiceProduct) => void })
     r.onend = () => {
       if (rec.current !== r) return;
       rec.current = null;
-      fill(heard.current);
+      // Show what was heard so mis-heard words can be fixed before anything is filled in.
+      const said = heard.current.trim();
+      if (said.length < 3) {
+        setMode("idle");
+        setMessage({ tone: "error", text: "Didn't catch that. Tap the mic and try again, a little closer." });
+        return;
+      }
+      setText(said);
+      setFromVoice(true);
+      setMode("typing");
     };
     try {
       r.start();
@@ -182,7 +194,9 @@ export function VoiceAdd({ onFill }: { onFill: (fields: VoiceProduct) => void })
         </div>
       ) : mode === "typing" ? (
         <div className="voice-type">
-          <label className="label" htmlFor="voice-text">Describe it the way you&apos;d say it</label>
+          <label className="label" htmlFor="voice-text">
+            {fromVoice ? "Here's what we heard. Fix anything, then fill in" : "Describe it the way you'd say it"}
+          </label>
           <textarea
             id="voice-text"
             className="input textarea"
@@ -206,7 +220,7 @@ export function VoiceAdd({ onFill }: { onFill: (fields: VoiceProduct) => void })
             <b>{mode === "working" ? "Filling in the details…" : "Or just say it"}</b>
             <span>&ldquo;Got the boAt headphones from Amazon for ₹1,999, return in 7 days&rdquo;</span>
           </span>
-          <button type="button" className="btn btn-quiet btn-sm voice-typebtn" onClick={() => setMode("typing")} disabled={mode === "working"}>
+          <button type="button" className="btn btn-quiet btn-sm voice-typebtn" onClick={() => { setFromVoice(false); setMode("typing"); }} disabled={mode === "working"}>
             Type instead
           </button>
         </div>

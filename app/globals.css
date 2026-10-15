@@ -65,7 +65,8 @@ body {
 h1, h2, h3 { margin: 0; letter-spacing: -0.035em; line-height: 1.12; font-weight: 800; }
 p { margin: 0; }
 a { color: inherit; }
-button { font: inherit; color: inherit; }
+/* Form controls don't inherit the page font by default; make every one use Manrope. */
+button, input, select, textarea, optgroup { font: inherit; color: inherit; }
 .num { font-variant-numeric: tabular-nums; }
 .muted { color: var(--muted); }
 .sr-only {
@@ -705,7 +706,18 @@ button { font: inherit; color: inherit; }
 
 /* ---------- Landing page ---------- */
 .landing { max-width: 1280px; margin: 0 auto; padding: 0 40px; }
-.l-header { display: flex; justify-content: space-between; align-items: center; height: 64px; }
+.l-header {
+  display: flex; justify-content: space-between; align-items: center; height: 64px;
+  /* Stays at the top while scrolling; the frosted bar runs edge to edge past the page padding. */
+  position: sticky; top: 0; z-index: 30;
+  margin: 0 -40px; padding: 0 40px;
+  background: rgba(244, 241, 250, 0.92);
+  /* Paint the bar out to both screen edges on wide windows without widening the page. */
+  box-shadow: 0 0 0 100vmax rgba(244, 241, 250, 0.92);
+  clip-path: inset(0 -100vmax);
+  backdrop-filter: saturate(1.6) blur(16px);
+  -webkit-backdrop-filter: saturate(1.6) blur(16px);
+}
 .l-nav { display: flex; gap: 6px; }
 .l-hero { display: grid; grid-template-columns: 1fr 1.05fr; gap: 40px; align-items: center; padding: 28px 0 0; }
 .l-eyebrow { font-size: 14px; font-weight: 600; color: var(--muted); margin-bottom: 14px; }
@@ -776,7 +788,7 @@ button { font: inherit; color: inherit; }
 }
 @media (max-width: 640px) {
   .landing { padding: 0 18px; }
-  .l-header { height: 56px; }
+  .l-header { height: 56px; margin: 0 -18px; padding: 0 18px; }
     .l-lead { margin-top: 14px; }
   .l-cta { margin-top: 22px; }
   .hv { padding: 52px 14px 50px; border-radius: 26px; }
