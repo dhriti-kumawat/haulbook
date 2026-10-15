@@ -705,7 +705,16 @@ button { font: inherit; color: inherit; }
 
 /* ---------- Landing page ---------- */
 .landing { max-width: 1280px; margin: 0 auto; padding: 0 40px; }
-.l-header { display: flex; justify-content: space-between; align-items: center; height: 64px; }
+.l-header {
+  display: flex; justify-content: space-between; align-items: center; height: 64px;
+  /* Stays at the top while scrolling; the frosted bar runs edge to edge past the page padding. */
+  position: sticky; top: 0; z-index: 30;
+  margin: 0 -40px; padding: 0 40px;
+  background: rgba(244, 241, 250, 0.82);
+  backdrop-filter: saturate(1.6) blur(16px);
+  -webkit-backdrop-filter: saturate(1.6) blur(16px);
+  border-bottom: 1px solid rgba(35, 29, 59, 0.05);
+}
 .l-nav { display: flex; gap: 6px; }
 .l-hero { display: grid; grid-template-columns: 1fr 1.05fr; gap: 40px; align-items: center; padding: 28px 0 0; }
 .l-eyebrow { font-size: 14px; font-weight: 600; color: var(--muted); margin-bottom: 14px; }
@@ -776,7 +785,7 @@ button { font: inherit; color: inherit; }
 }
 @media (max-width: 640px) {
   .landing { padding: 0 18px; }
-  .l-header { height: 56px; }
+  .l-header { height: 56px; margin: 0 -18px; padding: 0 18px; }
     .l-lead { margin-top: 14px; }
   .l-cta { margin-top: 22px; }
   .hv { padding: 52px 14px 50px; border-radius: 26px; }
