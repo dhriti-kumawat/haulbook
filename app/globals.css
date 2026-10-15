@@ -717,7 +717,6 @@ button, input, select, textarea, optgroup { font: inherit; color: inherit; }
   clip-path: inset(0 -100vmax);
   backdrop-filter: saturate(1.6) blur(16px);
   -webkit-backdrop-filter: saturate(1.6) blur(16px);
-  border-bottom: 1px solid rgba(35, 29, 59, 0.05);
 }
 .l-nav { display: flex; gap: 6px; }
 .l-hero { display: grid; grid-template-columns: 1fr 1.05fr; gap: 40px; align-items: center; padding: 28px 0 0; }
